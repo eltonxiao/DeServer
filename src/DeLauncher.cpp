@@ -1,4 +1,5 @@
 #include "DeLauncher.h"
+#include <algorithm>
 #include <boost/thread/thread.hpp>
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
@@ -17,8 +18,8 @@ using namespace dengine;
 
 
 
-DeLauncher::DeLauncher()
-	:portRange(1980, 2980),
+DeLauncher::DeLauncher(uint16_t start,  uint16_t stop)
+	:portRange(std::min(start,stop), std::max(start,stop)),
 	lastPort_(portRange.second)
 {
 }
@@ -26,7 +27,13 @@ DeLauncher::DeLauncher()
 DecodeEngin *DeLauncher::LaunchDEngine()
 {
 	const uint32_t port = allocPort();
-	phandle handle = create_process(port);
+	const phandle handle = create_process(port);
+	if (handle == INVALID_HANDLE)
+	{
+		cout << "ERROR: create process failed!" << endl;
+		freePort(port);
+		return 0;
+	}
 	commitPort(port, handle);
 
 	DecodeEngine *instance = 0;
@@ -68,24 +75,27 @@ DecodeEngine *DeLauncher::connect(uint16_t port)
 
 uint16_t DeLauncher::allocPort()
 {
+	boost::mutex::scoped_lock scoped_lock(mutex_);
+
+	const phandle place_holder = (phandle)-1;
 	const uint16_t backup = lastPort_;
 	uint16_t port = 0;
-	while (!port)
+	while (true)
 	{
 		if (++lastPort_ > portRange.second)
 			lastPort_ = portRange.first;
 	
-		if (backup == lastPort_)
-			break; // no free port
-
-		const phandle handle = ppmap_[lastPort_]; // here, we have inserted one as allocated mark
-		if (!handle) 
-			port = lastPort_;
-		else if (!check_alive(handle))
+		const phandle handle = ppmap_[lastPort_];
+		if (!handle ||
+			(handle != place_holder &&
+			 !check_alive(handle)))
 		{
-			ppmap_[lastPort_] = (phandle)0;
+			ppmap_[lastPort_] = place_holder;
 			port = lastPort_;
 		}
+
+		if (port || backup == lastPort_)
+			break; 
 	}
 
 	return port;
@@ -94,10 +104,12 @@ uint16_t DeLauncher::allocPort()
 
 void DeLauncher::commitPort(uint16_t port, phandle, handle)
 {
+	boost::mutex::scoped_lock scoped_lock(mutex_);
 	ppmap_[port] = handle;
 }
 
 void DeLauncher::freePort(uint16_t port)
 {
+	boost::mutex::scoped_lock scoped_lock(mutex_);
 	ppmap_.erase(port);
 }
