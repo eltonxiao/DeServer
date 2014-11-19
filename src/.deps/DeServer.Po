@@ -331,10 +331,9 @@ DeServer.o: DeServer.cpp /usr/include/stdc-predef.h \
  /usr/local/include/boost/smart_ptr/scoped_ptr.hpp \
  /usr/local/include/thrift/concurrency/PlatformThreadFactory.h \
  /usr/include/c++/4.8.3/stdexcept /usr/include/c++/4.8.3/sstream \
- /usr/include/c++/4.8.3/bits/sstream.tcc \
- gen-cpp/../gen-cpp/DecodeEngine.h \
+ /usr/include/c++/4.8.3/bits/sstream.tcc gen-cpp/DecodeEngine.h \
  /usr/local/include/thrift/TDispatchProcessor.h \
- gen-cpp/../gen-cpp/decode_engine_types.h \
+ gen-cpp/decode_engine_types.h \
  /usr/local/include/thrift/TApplicationException.h
 
 /usr/include/stdc-predef.h:
@@ -1133,10 +1132,10 @@ DeServer.o: DeServer.cpp /usr/include/stdc-predef.h \
 
 /usr/include/c++/4.8.3/bits/sstream.tcc:
 
-gen-cpp/../gen-cpp/DecodeEngine.h:
+gen-cpp/DecodeEngine.h:
 
 /usr/local/include/thrift/TDispatchProcessor.h:
 
-gen-cpp/../gen-cpp/decode_engine_types.h:
+gen-cpp/decode_engine_types.h:
 
 /usr/local/include/thrift/TApplicationException.h:

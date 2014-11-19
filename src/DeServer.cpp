@@ -12,7 +12,7 @@
 #include <stdexcept>
 #include <sstream>
 
-#include "../gen-cpp/DecodeEngine.h"
+#include "./gen-cpp/DecodeEngine.h"
 
 using namespace std;
 using namespace apache::thrift;
