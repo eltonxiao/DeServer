@@ -46,3 +46,7 @@ service DecodeEngine {
 
 }
 
+service BulletinBoard {
+   i16 allocWorker()
+}
+

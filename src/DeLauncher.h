@@ -9,9 +9,9 @@ class DecodeEngine;
 class DeLauncher
 {
 public:
-	DeLauncher(uint16_t start,  uint16_t stop);
+	DeLauncher(uint16_t start,  uint16_t stop, const char *image);
 	~DeLauncher();
-	DecodeEngine *LaunchDEngine();
+	DecodeEngine *LaunchDEngine(uint16_t *pport = 0);
 
 private:
 	uint16_t allocPort();
@@ -20,7 +20,10 @@ private:
 
 	DecodeEngine *connect(uint16_t port);
 
+	phandle createProcess(uint16_t port);
+
 	std::pair<uint16_t,uint16_t> portRange_;
+	std::string image_;
 	std::map<uint16_t,phandle> ppmap_; // port/process map
 	boost::mutex mutex_;
 	uint16_t lastPort_;

@@ -11,10 +11,10 @@
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <string>
 
 #include "./gen-cpp/DecodeEngine.h"
 
-using namespace std;
 using namespace apache::thrift;
 using namespace apache::thrift::concurrency;
 using namespace apache::thrift::protocol;
@@ -28,15 +28,17 @@ class DecodeEngineHandler : public DecodeEngineIf {
   DecodeEngineHandler() {}
 
   void ping() {
-    cout << "ping()" << endl;
+    std::cout << "ping()" << std::endl;
   }
 
   int32_t add(const int32_t n1, const int32_t n2) {
-    cout << "add(" << n1 << ", " << n2 << ")" << endl;
+    std::cout << "add(" << n1 << ", " << n2 << ")" << std::endl;
     return n1 + n2;
   }
 
 };
+
+
 
 int main(int argc, char **argv) {
 
