@@ -45,16 +45,14 @@ int main(int argc, char **argv) {
   boost::shared_ptr<TProcessor> processor(new DecodeEngineProcessor(handler));
   boost::shared_ptr<TServerTransport> serverTransport(new TServerSocket(9090));
   boost::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
-
+/*
   TSimpleServer server(processor,
                        serverTransport,
                        transportFactory,
                        protocolFactory);
 
-
-  /*
-   * Or you could do one of these
-
+*/
+  
   const int workerCount = 4;
 
   boost::shared_ptr<ThreadManager> threadManager =
@@ -68,16 +66,17 @@ int main(int argc, char **argv) {
                            transportFactory,
                            protocolFactory,
                            threadManager);
-
+/*
   TThreadedServer server(processor,
                          serverTransport,
                          transportFactory,
                          protocolFactory);
 
-  */
+*/
 
   cout << "Starting the server..." << endl;
   server.serve();
   cout << "Done." << endl;
   return 0;
 }
+
