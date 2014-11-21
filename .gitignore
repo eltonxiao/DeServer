@@ -32,5 +32,7 @@ a.txt
 */gen-cpp/decode_engine_types.h
 */gen-cpp/decode_engine_types.lo
 */gen-cpp/decode_engine_types.o
+src/.libs/
+src/gen-cpp/
 libdegencpp.la
 
