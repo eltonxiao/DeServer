@@ -3,15 +3,14 @@
 #include <boost/thread/mutex.hpp>
 #include <utility>
 #include "ProcessUtility.h"
-#include "DeLauncherIf.h"
 
 class DecodeEngine;
 
-class DeLauncher : public DeLauncherIf
+class BbLauncher : public BbLauncherIf
 {
 public:
-	DeLauncher(uint16_t start,  uint16_t stop, const char *image);
-	virtual ~DeLauncher();
+	BbLauncher(uint16_t start,  uint16_t stop, const char *image);
+	virtual ~BbLauncher();
 	virtual DecodeEngine *LaunchDEngine(uint16_t *pport);
 
 	static DecodeEngine *connect(uint16_t port);

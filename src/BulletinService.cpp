@@ -29,7 +29,13 @@ public:
 
 	int16_t allocWorker() 
 	{
-		return launcher->allocWorker();
+		uint16_t port = 0;
+		try {
+			delete launcher->LaunchDEngine(&port);
+		} catch (...) {
+			std::cout << "ERROR: exception in allocWorker !" << std::endl;
+		}
+		return port;
 	}
 
 private:

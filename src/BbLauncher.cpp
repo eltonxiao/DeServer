@@ -19,8 +19,8 @@ using namespace dengine;
 class MyDecodeEngineClient : public DecodeEngineClient
 {
 public:
-	MyDecodeEngineClient(const boost::shared_ptr< ::apache::thrift::protocol::TProtocol>& prot,
-				const boost::shared_ptr<TTransport>& transport)
+	MyDecodeEngineClient(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> prot,
+				boost::shared_ptr<TTransport> transport)
 		: DecodeEngineClient(prot),
 		  transport_(transport) {}
 
