@@ -23,9 +23,9 @@ using namespace apache::thrift::server;
 
 using namespace dengine;
 
-class DecodeEngineHandler : public DecodeEngineIf {
+class DecodeEngineProxyHandler : public DecodeEngineIf {
  public:
-  DecodeEngineHandler() {}
+  DecodeEngineProxyHandler() {}
 
   void ping() {
     std::cout << "ping()" << std::endl;
@@ -38,15 +38,22 @@ class DecodeEngineHandler : public DecodeEngineIf {
 
 };
 
+int master_service(int argc, char **argv)
+{
+	uint16_t port, start, stop;
+	ServerType_t type;
+	if (parseCommandLine(argc, argv, type, port))
+		return -1;
+	
+	std::cout << "INFO: decode engine master will serve on port:" << port << std::endl;
 
+	boost::shared_ptr<BbLauncher> launcher 
 
-int main(int argc, char **argv) {
-
-  boost::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
-  boost::shared_ptr<DecodeEngineHandler> handler(new DecodeEngineHandler());
-  boost::shared_ptr<TProcessor> processor(new DecodeEngineProcessor(handler));
-  boost::shared_ptr<TServerTransport> serverTransport(new TServerSocket(9090));
-  boost::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
+	boost::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
+	boost::shared_ptr<DecodeEngineProxyHandler> handler(new DecodeEngineProxyHandler());
+	boost::shared_ptr<TProcessor> processor(new DecodeEngineProcessor(handler));
+	boost::shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
+	boost::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
 /*
   TSimpleServer server(processor,
                        serverTransport,
@@ -55,19 +62,13 @@ int main(int argc, char **argv) {
 
 */
   
-  const int workerCount = 4;
+	const int workerCount = 4;
 
-  boost::shared_ptr<ThreadManager> threadManager =
-    ThreadManager::newSimpleThreadManager(workerCount);
-  boost::shared_ptr<PosixThreadFactory> threadFactory =
-    boost::shared_ptr<PosixThreadFactory>(new PosixThreadFactory());
-  threadManager->threadFactory(threadFactory);
-  threadManager->start();
-  TThreadPoolServer server(processor,
-                           serverTransport,
-                           transportFactory,
-                           protocolFactory,
-                           threadManager);
+	boost::shared_ptr<ThreadManager> threadManager = ThreadManager::newSimpleThreadManager(workerCount);
+	boost::shared_ptr<PosixThreadFactory> threadFactory = boost::shared_ptr<PosixThreadFactory>(new PosixThreadFactory());
+	threadManager->threadFactory(threadFactory);
+	threadManager->start();
+	TThreadPoolServer server(processor, serverTransport, transportFactory, protocolFactory, threadManager);
 /*
   TThreadedServer server(processor,
                          serverTransport,
@@ -76,9 +77,27 @@ int main(int argc, char **argv) {
 
 */
 
-  cout << "Starting the server..." << endl;
-  server.serve();
-  cout << "Done." << endl;
-  return 0;
+	cout << "INFO: Starting the server..." << endl;
+	server.serve();
+	cout << "INFO: Done." << endl;
+
+}
+
+int main(int argc, char **argv)
+{
+	uint16_t port, start, stop;
+	ServerType_t type;
+	if (parseCommandLine(argc, argv, type, port))
+		return -1;
+	
+	switch (type)
+	{
+	case ST_SLAVE:
+		return bulletin_service(argc, argv);
+	case ST_WORKER:
+		return worker_service(argc, argv);
+	default
+		return master_service(argc, argv);
+	}
 }
 

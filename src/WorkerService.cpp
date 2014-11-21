@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-#include "./gen-cpp/BulletinBoard.h"
+#include "./gen-cpp/DecodeEngine.h"
 #include "CommandLineParser.h"
 #include "DeLauncher.h"
 
@@ -22,44 +22,36 @@ using namespace apache::thrift::server;
 
 using namespace dengine;
 
-class BulletinBoardHandler : public BulletinBoardIf {
-public:
-	BulletinBoardHandler(boost::shared_ptr<DeLauncherIf> launcher) : launcher_(launcher) {}
-	~BulletinBoardIf() {}
+class DecodeEngineHandler : public DecodeEngineIf {
+ public:
+  DecodeEngineHandler() {}
 
-	int16_t allocWorker() 
-	{
-		uint16_t port = 0;
-		try {
-			delete launcher->LaunchDEngine(&port);
-		} catch (...) {
-			std::cout << "ERROR: exception in allocWorker !" << std::endl;
-		}
-		return port;
-	}
+  void ping() {
+    std::cout << "ping()" << std::endl;
+  }
 
-private:
-	boost::shared_ptr<DeLauncherIf> launcher_;
+  int32_t add(const int32_t n1, const int32_t n2) {
+    std::cout << "add(" << n1 << ", " << n2 << ")" << std::endl;
+    return n1 + n2;
+  }
+
 };
 
-int bulletin_service(int argc, char **argv)
+
+int worker_service(int argc, char **argv)
 {
 	uint16_t port, start, stop;
 	ServerType_t type;
 	if (parseCommandLine(argc, argv, type, port))
 		return -1;
 	
-	// TODO start, stop 
-	start = 1980;
-	stop = 2980;
-	std::cout << "INFO: bulletin board will serve on port:" << port << std::endl;
-	std::cout << "INFO: decode engine instance port range [" << start << ", " << stop << "]" << std::endl;
+	std::cout << "INFO: decode engine will serve on port:" << port << std::endl;
 
 	boost::shared_ptr<DeLauncherIf> launcher(new DeLauncher(start, stop, argv[0]));
 
 	boost::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
-	boost::shared_ptr<BulletinBoardHandler> handler(new BulletinBoardHandler(launcher));
-	boost::shared_ptr<TProcessor> processor(new BulletinBoardProcessor(handler));
+	boost::shared_ptr<DecodeEngineHandler> handler(new DecodeEngineHandler(launcher));
+	boost::shared_ptr<TProcessor> processor(new DecodeEngineProcessor(handler));
 	boost::shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
 	boost::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
 	TSimpleServer server(processor,
@@ -67,9 +59,9 @@ int bulletin_service(int argc, char **argv)
 		       transportFactory,
 		       protocolFactory);
 
-	std::cout << "INFO: Starting bulltein board..." << std::endl;
+	std::cout << "INFO: Starting decode engine..." << std::endl;
 	server.serve();
-	std::cout << "INFO: Bulletin board done." << std::endl;
+	std::cout << "INFO: Decode engine done." << std::endl;
 	return 0;
 }
 

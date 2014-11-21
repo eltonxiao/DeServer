@@ -1,11 +1,11 @@
-#include "DeLauncher.h"
+#include "BbLauncher.h"
 #include <algorithm>
 #include <boost/thread/thread.hpp>
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
 
-#include "./gen-cpp/DecodeEngine.h"
+#include "./gen-cpp/BulletinBoard.h"
 
 using namespace std;
 using namespace apache::thrift;
@@ -16,15 +16,15 @@ using namespace apache::thrift::server;
 
 using namespace dengine;
 
-class MyDecodeEngineClient : public DecodeEngineClient
+class MyBulletinBoardClient : public BulletinBoardClient
 {
 public:
-	MyDecodeEngineClient(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> prot,
+	MyBulletinBoardClient(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> prot,
 				boost::shared_ptr<TTransport> transport)
-		: DecodeEngineClient(prot),
+		: BulletinBoardClient(prot),
 		  transport_(transport) {}
 
-	~MyDecodeEngineClient()
+	~MyBulletinBoardClient()
 	{
 		transport_->close();
 	}
@@ -33,14 +33,14 @@ private:
 	boost::shared_ptr<TTransport> transport_;
 };
 
-DeLauncher::DeLauncher(uint16_t start,  uint16_t stop, const char *image)
+BbLauncher::BbLauncher(uint16_t start,  uint16_t stop, const char *image)
 	:portRange(std::min(start,stop), std::max(start,stop)),
 	image_(image),
 	lastPort_(portRange.second)
 {
 }
 
-DecodeEngin *DeLauncher::LaunchDEngine(uint16_t *pport)
+DecodeEngin *BbLauncher::LaunchBulletin(uint16_t *pport)
 {
 	const uint32_t port = allocPort();
 	const phandle handle = createProcess(port);
@@ -52,7 +52,7 @@ DecodeEngin *DeLauncher::LaunchDEngine(uint16_t *pport)
 	}
 	commitPort(port, handle);
 
-	DecodeEngine *instance = 0;
+	BulletinBoardIf *instance = 0;
 
 	while (true)
 	{
@@ -71,12 +71,12 @@ DecodeEngin *DeLauncher::LaunchDEngine(uint16_t *pport)
 	return instance;
 }
 
-DecodeEngine *DeLauncher::connect(uint16_t port)
+BulletinBoardIf *BbLauncher::connect(uint16_t port)
 {
 	boost::shared_ptr<TTransport> socket(new TSocket("localhost", port));
 	boost::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
 	boost::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
-	MyDecodeEngineClient *client = new MyDecodeEngineClient(protocol, transport);
+	MyBulletinBoardClient *client = new MyBulletinBoardClient(protocol, transport);
 
 	try
 	{
@@ -91,7 +91,7 @@ DecodeEngine *DeLauncher::connect(uint16_t port)
 	return client;
 }
 
-uint16_t DeLauncher::allocPort()
+uint16_t BbLauncher::allocPort()
 {
 	boost::mutex::scoped_lock scoped_lock(mutex_);
 
@@ -119,23 +119,23 @@ uint16_t DeLauncher::allocPort()
 	return port;
 }
 
-void DeLauncher::commitPort(uint16_t port, phandle, handle)
+void BbLauncher::commitPort(uint16_t port, phandle, handle)
 {
 	boost::mutex::scoped_lock scoped_lock(mutex_);
 	ppmap_[port] = handle;
 }
 
-void DeLauncher::freePort(uint16_t port)
+void BbLauncher::freePort(uint16_t port)
 {
 	boost::mutex::scoped_lock scoped_lock(mutex_);
 	ppmap_.erase(port);
 }
 
-phandle DeLauncher::createProcess(uint16_t port)
+phandle BbLauncher::createProcess(uint16_t port)
 {
 	char buffer [34];
 	itoa(port, buffer, 10);
-	char *argv[] = {(char *)0, "-w", "-p", buffer, (char *)0};
+	char *argv[] = {(char *)0, "-t", "slave", "-p", buffer, (char *)0};
 	argv[0] = image_.data();
 	return create_process(image_.data(), argv);
 }
