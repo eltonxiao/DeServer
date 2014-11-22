@@ -1,4 +1,6 @@
 *.o
+*.Po
+*.swp
 ./src/*.o
 .DeLauncher.cpp.swp
 .libs/libdegencpp.a
@@ -35,4 +37,7 @@ a.txt
 src/.libs/
 src/gen-cpp/
 libdegencpp.la
+aa.txt
+autom4te.cache/requests
+
 

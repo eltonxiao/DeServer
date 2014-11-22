@@ -1,4 +1,7 @@
 #include "CommandLineParser.h"
+#include <string.h>
+#include <stdlib.h>
+#include <iostream>
 
 int parseCommandLine(int argc, char **argv, ServerType_t &type, uint16_t &port)
 {
@@ -8,10 +11,10 @@ int parseCommandLine(int argc, char **argv, ServerType_t &type, uint16_t &port)
 	int arg = 1;
 	while (arg < argc)
 	{
-		if (!strcmp(argv[arg], "-p") && arg+1 < agrc)
+		if (!strcmp(argv[arg], "-p") && arg+1 < argc)
 		{
 			++arg;
-			port = itoa(argv[arg]);
+			port = atoi(argv[arg]);
 		}
 		else if (!strcmp(argv[arg], "-t") && arg+1 < argc)
 		{
@@ -28,7 +31,7 @@ int parseCommandLine(int argc, char **argv, ServerType_t &type, uint16_t &port)
 		else if (!strcmp(argv[arg], "-h") || !strcmp(argv[arg], "--help"))
 		{
 			std::cout << "command line example:" << std::endl;
-			std::cout << path << " -p 1980 -t master" << std::endl;
+			std::cout << argv[0] << " -p 1980 -t master" << std::endl;
 			std::cout << "-p socket port number" << std::endl;
 			std::cout << "-t server type: master | slave | worker" << std::endl; 
 			exit(0);

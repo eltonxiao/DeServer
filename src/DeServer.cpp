@@ -14,6 +14,12 @@
 #include <string>
 
 #include "./gen-cpp/DecodeEngine.h"
+#include "DeLauncherIf.h"
+#include "CommandLineParser.h"
+#include "BbLauncher.h"
+#include "DeLauncherRemote.h"
+#include "BulletinService.h"
+#include "WorkerService.h"
 
 using namespace apache::thrift;
 using namespace apache::thrift::concurrency;
@@ -25,7 +31,7 @@ using namespace dengine;
 
 class DecodeEngineProxyHandler : public DecodeEngineIf {
  public:
-  DecodeEngineProxyHandler() {}
+  DecodeEngineProxyHandler(const boost::shared_ptr<DeLauncherIf> &launcher) : launcher_(launcher) {}
 
   void ping() {
     std::cout << "ping()" << std::endl;
@@ -36,21 +42,33 @@ class DecodeEngineProxyHandler : public DecodeEngineIf {
     return n1 + n2;
   }
 
+private:
+	boost::shared_ptr<DeLauncherIf> launcher_;
+
 };
 
 int master_service(int argc, char **argv)
 {
-	uint16_t port, start, stop;
+	uint16_t port;
 	ServerType_t type;
 	if (parseCommandLine(argc, argv, type, port))
 		return -1;
 	
 	std::cout << "INFO: decode engine master will serve on port:" << port << std::endl;
 
-	boost::shared_ptr<BbLauncher> launcher 
+	boost::shared_ptr<BbLauncher> bblauncher(new BbLauncher(2014,2014, argv[0]));
+	boost::shared_ptr<BulletinBoardIf> bbif(bblauncher->LaunchBulletin());
+	if (!bbif.get())
+	{
+		std::cout << "ERROR: fail to launch bulletin board" << std::endl;
+		return -1;
+	}
+
+	boost::shared_ptr<DeLauncherIf> delauncher(new DeLauncherRemote(bbif));
+	
 
 	boost::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
-	boost::shared_ptr<DecodeEngineProxyHandler> handler(new DecodeEngineProxyHandler());
+	boost::shared_ptr<DecodeEngineProxyHandler> handler(new DecodeEngineProxyHandler(delauncher));
 	boost::shared_ptr<TProcessor> processor(new DecodeEngineProcessor(handler));
 	boost::shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
 	boost::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
@@ -77,15 +95,15 @@ int master_service(int argc, char **argv)
 
 */
 
-	cout << "INFO: Starting the server..." << endl;
+	std::cout << "INFO: Starting the server..." << std::endl;
 	server.serve();
-	cout << "INFO: Done." << endl;
+	std::cout << "INFO: Done." << std::endl;
 
 }
 
 int main(int argc, char **argv)
 {
-	uint16_t port, start, stop;
+	uint16_t port;
 	ServerType_t type;
 	if (parseCommandLine(argc, argv, type, port))
 		return -1;
@@ -96,7 +114,7 @@ int main(int argc, char **argv)
 		return bulletin_service(argc, argv);
 	case ST_WORKER:
 		return worker_service(argc, argv);
-	default
+	default:
 		return master_service(argc, argv);
 	}
 }

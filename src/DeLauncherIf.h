@@ -1,11 +1,15 @@
 #pragma once
+#include <stdint.h>
 
-class DecodeEngine;
+namespace dengine {
+class DecodeEngineIf;
+}
+using namespace dengine;
 
 class DeLauncherIf
 {
 public:
 	virtual ~DeLauncherIf() {}
-	virtual DecodeEngine *LaunchDEngine(uint16_t *pport = 0) = 0;
+	virtual DecodeEngineIf *LaunchDEngine(uint16_t* pport = 0) = 0;
 };
 

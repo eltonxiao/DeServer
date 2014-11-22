@@ -1,4 +1,4 @@
 #pragma once
 
-int bulltein_service(int argc, char **argv)
+int bulletin_service(int argc, char **argv);
 

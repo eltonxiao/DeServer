@@ -40,17 +40,16 @@ class DecodeEngineHandler : public DecodeEngineIf {
 
 int worker_service(int argc, char **argv)
 {
-	uint16_t port, start, stop;
+	uint16_t port;
 	ServerType_t type;
 	if (parseCommandLine(argc, argv, type, port))
 		return -1;
 	
 	std::cout << "INFO: decode engine will serve on port:" << port << std::endl;
 
-	boost::shared_ptr<DeLauncherIf> launcher(new DeLauncher(start, stop, argv[0]));
 
 	boost::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
-	boost::shared_ptr<DecodeEngineHandler> handler(new DecodeEngineHandler(launcher));
+	boost::shared_ptr<DecodeEngineHandler> handler(new DecodeEngineHandler());
 	boost::shared_ptr<TProcessor> processor(new DecodeEngineProcessor(handler));
 	boost::shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
 	boost::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());

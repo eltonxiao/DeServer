@@ -16,7 +16,15 @@ bin_PROGRAMS = \
 	DeServer 
 
 DeServer_SOURCES = \
-	DeServer.cpp
+	BbLauncher.cpp \
+	DeLauncher.cpp \
+	BulletinService.cpp \
+	ChildService.cpp \
+	CommandLineParser.cpp \
+	DeLauncherRemote.cpp \
+	DeServer.cpp \
+	ProcessUtility.cpp \
+	WorkerService.cpp
 
 DeServer_LDADD = /usr/local/lib/libthrift.la \
                  libdegencpp.la

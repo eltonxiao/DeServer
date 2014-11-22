@@ -5,16 +5,14 @@
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
 
-#include "./gen-cpp/BulletinBoard.h"
 
 using namespace std;
 using namespace apache::thrift;
 using namespace apache::thrift::concurrency;
 using namespace apache::thrift::protocol;
 using namespace apache::thrift::transport;
-using namespace apache::thrift::server;
+//using namespace apache::thrift::server;
 
-using namespace dengine;
 
 class MyBulletinBoardClient : public BulletinBoardClient
 {
@@ -34,13 +32,13 @@ private:
 };
 
 BbLauncher::BbLauncher(uint16_t start,  uint16_t stop, const char *image)
-	:portRange(std::min(start,stop), std::max(start,stop)),
+	:portRange_(std::min(start,stop), std::max(start,stop)),
 	image_(image),
-	lastPort_(portRange.second)
+	lastPort_(portRange_.second)
 {
 }
 
-DecodeEngin *BbLauncher::LaunchBulletin(uint16_t *pport)
+BulletinBoardIf *BbLauncher::LaunchBulletin(uint16_t *pport)
 {
 	const uint32_t port = allocPort();
 	const phandle handle = createProcess(port);
@@ -100,8 +98,8 @@ uint16_t BbLauncher::allocPort()
 	uint16_t port = 0;
 	while (true)
 	{
-		if (++lastPort_ > portRange.second)
-			lastPort_ = portRange.first;
+		if (++lastPort_ > portRange_.second)
+			lastPort_ = portRange_.first;
 	
 		const phandle handle = ppmap_[lastPort_];
 		if (!handle ||
@@ -119,7 +117,7 @@ uint16_t BbLauncher::allocPort()
 	return port;
 }
 
-void BbLauncher::commitPort(uint16_t port, phandle, handle)
+void BbLauncher::commitPort(uint16_t port, phandle handle)
 {
 	boost::mutex::scoped_lock scoped_lock(mutex_);
 	ppmap_[port] = handle;
@@ -131,12 +129,18 @@ void BbLauncher::freePort(uint16_t port)
 	ppmap_.erase(port);
 }
 
+
 phandle BbLauncher::createProcess(uint16_t port)
 {
 	char buffer [34];
-	itoa(port, buffer, 10);
-	char *argv[] = {(char *)0, "-t", "slave", "-p", buffer, (char *)0};
-	argv[0] = image_.data();
+	sprintf(buffer, "%d", (int)port);
+	//itoa(port, buffer, 10);
+//	char *argv[] = {(char *)0, "-t", "slave", "-p", buffer, (char *)0};
+//	argv[0] = (char*)image_.data();
+	
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+	char *argv[] = {(char*)image_.data(), "-t", "slave", "-p", buffer, (char *)0};
+	
 	return create_process(image_.data(), argv);
 }
 

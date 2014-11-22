@@ -1,30 +1,14 @@
 #include "ProcessUtility.h"
 //#include <sys/types.h>
 #include <unistd.h>
+#include <spawn.h>
 #include <errno.h>
 #include <iostream>
 #include <assert.h>
-#include "ChildService.h"
+#include <string.h>
+#include <sys/wait.h>
 
-
-phandle create_process(uint16_t port)
-{
-	pid_t p = fork();
-	if (p == 0)
-	{
-		int status = child_service(port);
-		exit(status);
-	}
-	else if (p < 0)
-	{
-		cout << "ERROR: failed to fork! errno = " << errno << endl;
-		return INVALID_HANDLE;
-	}
-	else
-	{
-		return p;
-	}
-}
+using namespace process_utility;
 
 phandle create_process(const char *path, char *const argv[])
 {
@@ -34,7 +18,7 @@ phandle create_process(const char *path, char *const argv[])
 	posix_spawn_file_actions_t fact;
 	posix_spawnattr_init(&attr);
 	posix_spawn_file_actions_init(&fact);
-	posix_spawn(&pid, path, &fact,&attr, args, environ);
+	status = posix_spawn(&pid, path, &fact,&attr, argv, environ);
 	if (status == 0)
 	{
 		return (phandle)pid;
@@ -46,13 +30,15 @@ phandle create_process(const char *path, char *const argv[])
 	}
 }
 
-int kill_process(phandle p)
+int kill_process(phandle)
 {
+	assert(0); //TODO
 	return 0;
 }
 
-int wait_process(phandle p)
+int wait_process(phandle)
 {
+	assert(0); //TODO
 	return 0;
 }
 

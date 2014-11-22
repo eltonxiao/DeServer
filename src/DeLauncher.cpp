@@ -4,17 +4,17 @@
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
-
 #include "./gen-cpp/DecodeEngine.h"
+
 
 using namespace std;
 using namespace apache::thrift;
 using namespace apache::thrift::concurrency;
 using namespace apache::thrift::protocol;
 using namespace apache::thrift::transport;
-using namespace apache::thrift::server;
-
+//using namespace apache::thrift::server;
 using namespace dengine;
+
 
 class MyDecodeEngineClient : public DecodeEngineClient
 {
@@ -34,13 +34,13 @@ private:
 };
 
 DeLauncher::DeLauncher(uint16_t start,  uint16_t stop, const char *image)
-	:portRange(std::min(start,stop), std::max(start,stop)),
+	:portRange_(std::min(start,stop), std::max(start,stop)),
 	image_(image),
-	lastPort_(portRange.second)
+	lastPort_(portRange_.second)
 {
 }
 
-DecodeEngin *DeLauncher::LaunchDEngine(uint16_t *pport)
+DecodeEngineIf *DeLauncher::LaunchDEngine(uint16_t *pport)
 {
 	const uint32_t port = allocPort();
 	const phandle handle = createProcess(port);
@@ -52,7 +52,7 @@ DecodeEngin *DeLauncher::LaunchDEngine(uint16_t *pport)
 	}
 	commitPort(port, handle);
 
-	DecodeEngine *instance = 0;
+	DecodeEngineIf *instance = 0;
 
 	while (true)
 	{
@@ -71,7 +71,7 @@ DecodeEngin *DeLauncher::LaunchDEngine(uint16_t *pport)
 	return instance;
 }
 
-DecodeEngine *DeLauncher::connect(uint16_t port)
+DecodeEngineIf *DeLauncher::connect(uint16_t port)
 {
 	boost::shared_ptr<TTransport> socket(new TSocket("localhost", port));
 	boost::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
@@ -100,8 +100,8 @@ uint16_t DeLauncher::allocPort()
 	uint16_t port = 0;
 	while (true)
 	{
-		if (++lastPort_ > portRange.second)
-			lastPort_ = portRange.first;
+		if (++lastPort_ > portRange_.second)
+			lastPort_ = portRange_.first;
 	
 		const phandle handle = ppmap_[lastPort_];
 		if (!handle ||
@@ -119,7 +119,7 @@ uint16_t DeLauncher::allocPort()
 	return port;
 }
 
-void DeLauncher::commitPort(uint16_t port, phandle, handle)
+void DeLauncher::commitPort(uint16_t port, phandle handle)
 {
 	boost::mutex::scoped_lock scoped_lock(mutex_);
 	ppmap_[port] = handle;
@@ -134,9 +134,9 @@ void DeLauncher::freePort(uint16_t port)
 phandle DeLauncher::createProcess(uint16_t port)
 {
 	char buffer [34];
-	itoa(port, buffer, 10);
-	char *argv[] = {(char *)0, "-w", "-p", buffer, (char *)0};
-	argv[0] = image_.data();
+	sprintf(buffer, "%d", (int)port);
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+	char *argv[] = {(char*)image_.data(), "-t", "worker", "-p", buffer, (char *)0};
 	return create_process(image_.data(), argv);
 }
 

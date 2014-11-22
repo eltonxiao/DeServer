@@ -105,7 +105,11 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_DeServer_OBJECTS = DeServer.$(OBJEXT)
+am_DeServer_OBJECTS = BbLauncher.$(OBJEXT) DeLauncher.$(OBJEXT) \
+	BulletinService.$(OBJEXT) ChildService.$(OBJEXT) \
+	CommandLineParser.$(OBJEXT) DeLauncherRemote.$(OBJEXT) \
+	DeServer.$(OBJEXT) ProcessUtility.$(OBJEXT) \
+	WorkerService.$(OBJEXT)
 DeServer_OBJECTS = $(am_DeServer_OBJECTS)
 DeServer_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
 AM_V_P = $(am__v_P_$(V))
@@ -318,7 +322,15 @@ nodist_libdegencpp_la_SOURCES = \
 
 libdegencpp_la_LIBADD = /usr/local/lib/libthrift.la
 DeServer_SOURCES = \
-	DeServer.cpp
+	BbLauncher.cpp \
+	DeLauncher.cpp \
+	BulletinService.cpp \
+	ChildService.cpp \
+	CommandLineParser.cpp \
+	DeLauncherRemote.cpp \
+	DeServer.cpp \
+	ProcessUtility.cpp \
+	WorkerService.cpp
 
 DeServer_LDADD = /usr/local/lib/libthrift.la \
                  libdegencpp.la
@@ -461,7 +473,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/BbLauncher.Po
+include ./$(DEPDIR)/BulletinService.Po
+include ./$(DEPDIR)/ChildService.Po
+include ./$(DEPDIR)/CommandLineParser.Po
+include ./$(DEPDIR)/DeLauncher.Po
+include ./$(DEPDIR)/DeLauncherRemote.Po
 include ./$(DEPDIR)/DeServer.Po
+include ./$(DEPDIR)/ProcessUtility.Po
+include ./$(DEPDIR)/WorkerService.Po
 include gen-cpp/$(DEPDIR)/DecodeEngine.Plo
 include gen-cpp/$(DEPDIR)/DecodeEngine_server.skeleton.Plo
 include gen-cpp/$(DEPDIR)/decode_engine_constants.Plo

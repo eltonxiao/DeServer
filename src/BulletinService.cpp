@@ -1,3 +1,4 @@
+#include "BulletinService.h"
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/server/TSimpleServer.h>
 #include <thrift/server/TThreadPoolServer.h>
@@ -11,6 +12,7 @@
 #include <string>
 
 #include "./gen-cpp/BulletinBoard.h"
+#include "./gen-cpp/DecodeEngine.h"
 #include "CommandLineParser.h"
 #include "DeLauncher.h"
 
@@ -24,14 +26,14 @@ using namespace dengine;
 
 class BulletinBoardHandler : public BulletinBoardIf {
 public:
-	BulletinBoardHandler(boost::shared_ptr<DeLauncherIf> launcher) : launcher_(launcher) {}
-	~BulletinBoardIf() {}
+	BulletinBoardHandler(const boost::shared_ptr<DeLauncherIf> &launcher) : launcher_(launcher) {}
+	~BulletinBoardHandler() {}
 
 	int16_t allocWorker() 
 	{
 		uint16_t port = 0;
 		try {
-			delete launcher->LaunchDEngine(&port);
+			delete launcher_->LaunchDEngine(&port);
 		} catch (...) {
 			std::cout << "ERROR: exception in allocWorker !" << std::endl;
 		}

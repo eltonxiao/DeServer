@@ -5,16 +5,16 @@
 #include "ProcessUtility.h"
 #include "DeLauncherIf.h"
 
-class DecodeEngine;
+using namespace process_utility;
 
 class DeLauncher : public DeLauncherIf
 {
 public:
 	DeLauncher(uint16_t start,  uint16_t stop, const char *image);
 	virtual ~DeLauncher();
-	virtual DecodeEngine *LaunchDEngine(uint16_t *pport);
+	virtual DecodeEngineIf *LaunchDEngine(uint16_t *pport);
 
-	static DecodeEngine *connect(uint16_t port);
+	static DecodeEngineIf *connect(uint16_t port);
 private:
 	uint16_t allocPort();
 	void commitPort(uint16_t port, phandle handle);

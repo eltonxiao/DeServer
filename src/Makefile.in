@@ -105,7 +105,11 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_DeServer_OBJECTS = DeServer.$(OBJEXT)
+am_DeServer_OBJECTS = BbLauncher.$(OBJEXT) DeLauncher.$(OBJEXT) \
+	BulletinService.$(OBJEXT) ChildService.$(OBJEXT) \
+	CommandLineParser.$(OBJEXT) DeLauncherRemote.$(OBJEXT) \
+	DeServer.$(OBJEXT) ProcessUtility.$(OBJEXT) \
+	WorkerService.$(OBJEXT)
 DeServer_OBJECTS = $(am_DeServer_OBJECTS)
 DeServer_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
 AM_V_P = $(am__v_P_@AM_V@)
@@ -318,7 +322,15 @@ nodist_libdegencpp_la_SOURCES = \
 
 libdegencpp_la_LIBADD = /usr/local/lib/libthrift.la
 DeServer_SOURCES = \
-	DeServer.cpp
+	BbLauncher.cpp \
+	DeLauncher.cpp \
+	BulletinService.cpp \
+	ChildService.cpp \
+	CommandLineParser.cpp \
+	DeLauncherRemote.cpp \
+	DeServer.cpp \
+	ProcessUtility.cpp \
+	WorkerService.cpp
 
 DeServer_LDADD = /usr/local/lib/libthrift.la \
                  libdegencpp.la
@@ -461,7 +473,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/BbLauncher.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/BulletinService.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ChildService.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CommandLineParser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DeLauncher.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DeLauncherRemote.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DeServer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProcessUtility.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/WorkerService.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gen-cpp/$(DEPDIR)/DecodeEngine.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gen-cpp/$(DEPDIR)/DecodeEngine_server.skeleton.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gen-cpp/$(DEPDIR)/decode_engine_constants.Plo@am__quote@

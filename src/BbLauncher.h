@@ -2,16 +2,19 @@
 #include <string>
 #include <boost/thread/mutex.hpp>
 #include <utility>
+#include <stdint.h>
 #include "ProcessUtility.h"
+#include "./gen-cpp/BulletinBoard.h"
 
-class BulletinBoardIf;
+using namespace process_utility;
+using namespace dengine;
 
 class BbLauncher
 {
 public:
 	BbLauncher(uint16_t start,  uint16_t stop, const char *image);
 	~BbLauncher();
-	virtual BulletinBoardIf *LaunchBulletin(uint16_t *pport);
+	BulletinBoardIf *LaunchBulletin(uint16_t *pport = 0);
 
 private:
 	uint16_t allocPort();
