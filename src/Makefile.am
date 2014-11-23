@@ -16,7 +16,8 @@ libdegencpp_la_LIBADD = /usr/local/lib/libthrift.la
 
 
 bin_PROGRAMS = \
-	DeServer 
+	DeServer \
+	DeClient
 
 DeServer_SOURCES = \
 	BbLauncher.cpp \
@@ -32,8 +33,13 @@ DeServer_LDADD = /usr/local/lib/libthrift.la \
 	libdegencpp.la \
 	-lboost_thread
 
-#DeClient_SOURCES = \
-#	CppClient.cpp
+
+DeClient_SOURCES = \
+	DeClient.cpp
+
+DeClient_LDADD = /usr/local/lib/libthrift.la \
+	libdegencpp.la
+
 
 #
 # Common thrift code generation rules
@@ -51,11 +57,9 @@ AM_LDFLAGS = $(BOOST_LDFLAGS) $(LIBEVENT_LDFLAGS)
 clean-local:
 	$(RM) -r gen-cpp
 
-tutorialserver: all
+server: all
 	./DeServer
 
-tutorialclient: all
+client: all
 	./DeClient
 
-EXTRA_DIST = \
-	DeServer.cpp 

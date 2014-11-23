@@ -79,7 +79,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
-bin_PROGRAMS = DeServer$(EXEEXT)
+bin_PROGRAMS = DeServer$(EXEEXT) DeClient$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
@@ -104,6 +104,9 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
+am_DeClient_OBJECTS = DeClient.$(OBJEXT)
+DeClient_OBJECTS = $(am_DeClient_OBJECTS)
+DeClient_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
 am_DeServer_OBJECTS = BbLauncher.$(OBJEXT) DeLauncher.$(OBJEXT) \
 	BulletinService.$(OBJEXT) CommandLineParser.$(OBJEXT) \
 	DeLauncherRemote.$(OBJEXT) DeServer.$(OBJEXT) \
@@ -162,8 +165,9 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(nodist_libdegencpp_la_SOURCES) $(DeServer_SOURCES)
-DIST_SOURCES = $(DeServer_SOURCES)
+SOURCES = $(nodist_libdegencpp_la_SOURCES) $(DeClient_SOURCES) \
+	$(DeServer_SOURCES)
+DIST_SOURCES = $(DeClient_SOURCES) $(DeServer_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -335,9 +339,12 @@ DeServer_LDADD = /usr/local/lib/libthrift.la \
 	libdegencpp.la \
 	-lboost_thread
 
+DeClient_SOURCES = \
+	DeClient.cpp
 
-#DeClient_SOURCES = \
-#	CppClient.cpp
+DeClient_LDADD = /usr/local/lib/libthrift.la \
+	libdegencpp.la
+
 
 #
 # Common thrift code generation rules
@@ -346,9 +353,6 @@ THRIFT = thrift
 AM_CPPFLAGS = $(BOOST_CPPFLAGS) $(LIBEVENT_CPPFLAGS) -I$(top_srcdir)/lib/cpp/src -Igen-cpp
 AM_CXXFLAGS = -Wall -Wextra -pedantic
 AM_LDFLAGS = $(BOOST_LDFLAGS) $(LIBEVENT_LDFLAGS)
-EXTRA_DIST = \
-	DeServer.cpp 
-
 all: all-am
 
 .SUFFIXES:
@@ -461,6 +465,10 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+DeClient$(EXEEXT): $(DeClient_OBJECTS) $(DeClient_DEPENDENCIES) $(EXTRA_DeClient_DEPENDENCIES) 
+	@rm -f DeClient$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(DeClient_OBJECTS) $(DeClient_LDADD) $(LIBS)
+
 DeServer$(EXEEXT): $(DeServer_OBJECTS) $(DeServer_DEPENDENCIES) $(EXTRA_DeServer_DEPENDENCIES) 
 	@rm -f DeServer$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(DeServer_OBJECTS) $(DeServer_LDADD) $(LIBS)
@@ -476,6 +484,7 @@ distclean-compile:
 include ./$(DEPDIR)/BbLauncher.Po
 include ./$(DEPDIR)/BulletinService.Po
 include ./$(DEPDIR)/CommandLineParser.Po
+include ./$(DEPDIR)/DeClient.Po
 include ./$(DEPDIR)/DeLauncher.Po
 include ./$(DEPDIR)/DeLauncherRemote.Po
 include ./$(DEPDIR)/DeServer.Po
@@ -733,10 +742,10 @@ gen-cpp/BulletinBoard.cpp gen-cpp/BulletinBoard.h gen-cpp/BulletinBoard_server.s
 clean-local:
 	$(RM) -r gen-cpp
 
-tutorialserver: all
+server: all
 	./DeServer
 
-tutorialclient: all
+client: all
 	./DeClient
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

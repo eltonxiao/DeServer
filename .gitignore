@@ -39,5 +39,6 @@ src/gen-cpp/
 libdegencpp.la
 aa.txt
 autom4te.cache/requests
+autom4te.cache/*
 
 
