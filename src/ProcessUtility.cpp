@@ -8,7 +8,8 @@
 #include <string.h>
 #include <sys/wait.h>
 
-using namespace process_utility;
+namespace process_utility
+{
 
 phandle create_process(const char *path, char *const argv[])
 {
@@ -53,5 +54,7 @@ bool check_alive(phandle p)
 		return false;
 
 	return true;
+}
+
 }
 

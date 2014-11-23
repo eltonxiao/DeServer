@@ -12,7 +12,7 @@ class DeLauncherRemote : public DeLauncherIf
 {
 public:
 	DeLauncherRemote(const boost::shared_ptr<BulletinBoardIf>& board) : bboard_(board) {}
-	virtual ~DeLauncherRemote();
+	virtual ~DeLauncherRemote() {}
 	virtual DecodeEngineIf *LaunchDEngine(uint16_t *pport);
 
 private:

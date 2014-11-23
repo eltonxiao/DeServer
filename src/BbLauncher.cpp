@@ -38,6 +38,10 @@ BbLauncher::BbLauncher(uint16_t start,  uint16_t stop, const char *image)
 {
 }
 
+BbLauncher::~BbLauncher()
+{
+}
+
 BulletinBoardIf *BbLauncher::LaunchBulletin(uint16_t *pport)
 {
 	const uint32_t port = allocPort();

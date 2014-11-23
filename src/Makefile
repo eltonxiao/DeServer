@@ -94,9 +94,8 @@ CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libdegencpp_la_DEPENDENCIES = /usr/local/lib/libthrift.la
 am__dirstamp = $(am__leading_dot)dirstamp
-nodist_libdegencpp_la_OBJECTS = gen-cpp/decode_engine_constants.lo \
-	gen-cpp/DecodeEngine.lo \
-	gen-cpp/DecodeEngine_server.skeleton.lo \
+nodist_libdegencpp_la_OBJECTS = gen-cpp/BulletinBoard.lo \
+	gen-cpp/decode_engine_constants.lo gen-cpp/DecodeEngine.lo \
 	gen-cpp/decode_engine_types.lo
 libdegencpp_la_OBJECTS = $(nodist_libdegencpp_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
@@ -106,10 +105,9 @@ am__v_lt_1 =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_DeServer_OBJECTS = BbLauncher.$(OBJEXT) DeLauncher.$(OBJEXT) \
-	BulletinService.$(OBJEXT) ChildService.$(OBJEXT) \
-	CommandLineParser.$(OBJEXT) DeLauncherRemote.$(OBJEXT) \
-	DeServer.$(OBJEXT) ProcessUtility.$(OBJEXT) \
-	WorkerService.$(OBJEXT)
+	BulletinService.$(OBJEXT) CommandLineParser.$(OBJEXT) \
+	DeLauncherRemote.$(OBJEXT) DeServer.$(OBJEXT) \
+	ProcessUtility.$(OBJEXT) WorkerService.$(OBJEXT)
 DeServer_OBJECTS = $(am_DeServer_OBJECTS)
 DeServer_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
 AM_V_P = $(am__v_P_$(V))
@@ -313,19 +311,20 @@ top_srcdir = ..
 AUTOMAKE_OPTIONS = subdir-objects serial-tests
 noinst_LTLIBRARIES = libdegencpp.la
 nodist_libdegencpp_la_SOURCES = \
-        gen-cpp/decode_engine_constants.cpp \
-        gen-cpp/decode_engine_constants.h \
-        gen-cpp/DecodeEngine.cpp \
-        gen-cpp/DecodeEngine.h \
-        gen-cpp/DecodeEngine_server.skeleton.cpp \
-        gen-cpp/decode_engine_types.cpp
+	gen-cpp/BulletinBoard.cpp \
+	gen-cpp/BulletinBoard.h \
+	gen-cpp/decode_engine_constants.cpp \
+	gen-cpp/decode_engine_constants.h \
+	gen-cpp/DecodeEngine.cpp \
+	gen-cpp/DecodeEngine.h \
+	gen-cpp/decode_engine_types.cpp \
+	gen-cpp/decode_engine_types.h
 
 libdegencpp_la_LIBADD = /usr/local/lib/libthrift.la
 DeServer_SOURCES = \
 	BbLauncher.cpp \
 	DeLauncher.cpp \
 	BulletinService.cpp \
-	ChildService.cpp \
 	CommandLineParser.cpp \
 	DeLauncherRemote.cpp \
 	DeServer.cpp \
@@ -333,7 +332,8 @@ DeServer_SOURCES = \
 	WorkerService.cpp
 
 DeServer_LDADD = /usr/local/lib/libthrift.la \
-                 libdegencpp.la
+	libdegencpp.la \
+	-lboost_thread
 
 
 #DeClient_SOURCES = \
@@ -400,11 +400,11 @@ gen-cpp/$(am__dirstamp):
 gen-cpp/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) gen-cpp/$(DEPDIR)
 	@: > gen-cpp/$(DEPDIR)/$(am__dirstamp)
+gen-cpp/BulletinBoard.lo: gen-cpp/$(am__dirstamp) \
+	gen-cpp/$(DEPDIR)/$(am__dirstamp)
 gen-cpp/decode_engine_constants.lo: gen-cpp/$(am__dirstamp) \
 	gen-cpp/$(DEPDIR)/$(am__dirstamp)
 gen-cpp/DecodeEngine.lo: gen-cpp/$(am__dirstamp) \
-	gen-cpp/$(DEPDIR)/$(am__dirstamp)
-gen-cpp/DecodeEngine_server.skeleton.lo: gen-cpp/$(am__dirstamp) \
 	gen-cpp/$(DEPDIR)/$(am__dirstamp)
 gen-cpp/decode_engine_types.lo: gen-cpp/$(am__dirstamp) \
 	gen-cpp/$(DEPDIR)/$(am__dirstamp)
@@ -475,15 +475,14 @@ distclean-compile:
 
 include ./$(DEPDIR)/BbLauncher.Po
 include ./$(DEPDIR)/BulletinService.Po
-include ./$(DEPDIR)/ChildService.Po
 include ./$(DEPDIR)/CommandLineParser.Po
 include ./$(DEPDIR)/DeLauncher.Po
 include ./$(DEPDIR)/DeLauncherRemote.Po
 include ./$(DEPDIR)/DeServer.Po
 include ./$(DEPDIR)/ProcessUtility.Po
 include ./$(DEPDIR)/WorkerService.Po
+include gen-cpp/$(DEPDIR)/BulletinBoard.Plo
 include gen-cpp/$(DEPDIR)/DecodeEngine.Plo
-include gen-cpp/$(DEPDIR)/DecodeEngine_server.skeleton.Plo
 include gen-cpp/$(DEPDIR)/decode_engine_constants.Plo
 include gen-cpp/$(DEPDIR)/decode_engine_types.Plo
 
@@ -728,7 +727,7 @@ uninstall-am: uninstall-binPROGRAMS
 	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS
 
 
-gen-cpp/decode_engine_constants.cpp gen-cpp/decode_engine_constants.h gen-cpp/DecodeEngine.cpp gen-cpp/DecodeEngine.h gen-cpp/DecodeEngine_server.skeleton.cpp gen-cpp/decode_engine_types.cpp gen-cpp/decode_engine_types.h : decode_engine.thrift
+gen-cpp/BulletinBoard.cpp gen-cpp/BulletinBoard.h gen-cpp/BulletinBoard_server.skeleton.cpp gen-cpp/decode_engine_constants.cpp gen-cpp/decode_engine_constants.h gen-cpp/DecodeEngine.cpp gen-cpp/DecodeEngine.h gen-cpp/DecodeEngine_server.skeleton.cpp gen-cpp/decode_engine_types.cpp gen-cpp/decode_engine_types.h : decode_engine.thrift
 	$(THRIFT) --gen cpp -r $<
 
 clean-local:

@@ -11,7 +11,7 @@ class DeLauncher : public DeLauncherIf
 {
 public:
 	DeLauncher(uint16_t start,  uint16_t stop, const char *image);
-	virtual ~DeLauncher();
+	virtual ~DeLauncher() {}
 	virtual DecodeEngineIf *LaunchDEngine(uint16_t *pport);
 
 	static DecodeEngineIf *connect(uint16_t port);
