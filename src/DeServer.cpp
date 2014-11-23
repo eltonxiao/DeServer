@@ -95,10 +95,17 @@ int master_service(int argc, char **argv)
 
 */
 
-	std::cout << "INFO: Starting the server..." << std::endl;
-	server.serve();
+	std::cout << "INFO: Starting the master server..." << std::endl;
+	try
+	{
+		server.serve();
+	} catch (TException& tx) {
+		std::cout << "ERROR: " << tx.what() << std::endl;
+	}
+
 	std::cout << "INFO: Done." << std::endl;
 
+	return 0;
 }
 
 int main(int argc, char **argv)

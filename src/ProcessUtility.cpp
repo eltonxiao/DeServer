@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 namespace process_utility
 {
@@ -46,14 +47,14 @@ int wait_process(phandle)
 bool check_alive(phandle p)
 {
 	int Stat;
-        const pid_t wpid = waitpid(p, &Stat, WNOHANG);
+        const pid_t wpid = waitpid(p, &Stat, WNOHANG); // avoid zombie
  
-	if (wpid == -1 ||
-	    WIFEXITED(Stat) ||
-	    WIFSIGNALED(Stat))
-		return false;
+std::cout << "DBG: check alive: waitpid: wpid =" << wpid << "Stat" << Stat << std::endl;
+std::cout << "DBG: check alive: waitpid: WIFEXITED(Stat) " << WIFEXITED(Stat) << std::endl;
+std::cout << "DBG: check alive: waitpid: WIFSIGNALED(Stat) " << WIFSIGNALED(Stat) << std::endl;
+std::cout << "DBG: check alive: waitpid: kill " << kill(p, 0) << std::endl;
 
-	return true;
+	return !kill(p, 0);
 }
 
 }

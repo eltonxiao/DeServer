@@ -54,7 +54,10 @@ DecodeEngineIf *connect(uint16_t port, const char *host = "localhost")
 }
 int main(int argc, char **argv)
 {	
-	uint16_t port = 1000;
+	uint16_t port = 10000;
+
+	if (argc > 1) 
+		port = atoi(argv[1]);
 
 
 	std::cout << "INFO: connect to port " << port << " ..." << std::endl;

@@ -56,6 +56,7 @@ BulletinBoardIf *BbLauncher::LaunchBulletin(uint16_t *pport)
 
 	BulletinBoardIf *instance = 0;
 
+	usleep(40 * 1000);
 	while (true)
 	{
 		instance = connect(port);	
@@ -63,6 +64,8 @@ BulletinBoardIf *BbLauncher::LaunchBulletin(uint16_t *pport)
 			break;
 
 		boost::thread::yield();	
+		
+		cout << "INFO: try connect to (" << handle << ": " << port <<") again..." << endl;
 	}
 
 	if (!instance)
