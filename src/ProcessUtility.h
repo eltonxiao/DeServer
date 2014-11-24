@@ -10,6 +10,7 @@ typedef pid_t phandle;
 
 phandle create_process(const char *path, char *const argv[]);
 int kill_process(phandle p);
+int kill_process(const char *name);
 int wait_process(phandle p);
 bool check_alive(phandle p);
 

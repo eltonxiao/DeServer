@@ -8,6 +8,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <dirent.h>
 
 namespace process_utility
 {
@@ -36,6 +37,78 @@ int kill_process(phandle)
 {
 	assert(0); //TODO
 	return 0;
+}
+
+static int read_cmdline(char *restrict const dst, unsigned sz, unsigned pid){
+    char name[32];
+    int fd;
+    unsigned n = 0;
+    dst[0] = '\0';
+    snprintf(name, sizeof name, "/proc/%u/cmdline", pid);
+    fd = open(name, O_RDONLY);
+    if(fd==-1) return 0;
+    for(;;){
+        ssize_t r = read(fd,dst+n,sz-n);
+        if(r==-1){
+            if(errno==EINTR) continue;
+            break;
+        }
+        n += r;
+        if(n==sz) break; // filled the buffer
+        if(r==0) break;  // EOF
+    }
+    close(fd);
+    if(n){
+        int i;
+        if(n==sz) n--;
+        dst[n] = '\0';
+        i=n;
+        while(i--){
+            int c = dst[i];
+            if(c<' ' || c>'~') dst[i]=' ';
+        }
+    }
+    return n;
+}
+
+int kill_process(const char *name)
+{
+	DIR *dp;
+	struct dirent *ent;
+	dp = opendir("/proc");
+	if (!dp)
+	{
+		std::cout << "ERROR: opendir failed! " << strerror(errno) << std::endl;
+		return -1;
+	}
+
+	int count = 0;
+
+	for (;;) 
+	{
+		ent = readdir(dp);
+		if(unlikely(unlikely(!ent) || unlikely(!ent->d_name))) return 0;
+		if(likely( likely(*ent->d_name > '0') && likely(*ent->d_name <= '9') ))
+		{
+			char cmd[255];
+			const pid_t pid = strtoul(ent->d_name, NULL, 10);	
+			if (read_cmdline(cmd, sizeof(cmd), pid))
+			{
+				char cmdbk[255];
+				strcpy(cmdbk, cmd);
+				char *p = strstr(cmd, " ");
+				if (p) *p = '\0';
+				if (!strcmp(basename(cmd), name))
+				{
+					std::cout << "INFO: kill process " << pid << " command line:" << cmdbk << std::endl; 
+					count++;
+				}
+			}
+		}
+	}
+
+	closedir(dp);
+	return count;
 }
 
 int wait_process(phandle)
