@@ -54,6 +54,10 @@ int master_service(int argc, char **argv)
 	if (parseCommandLine(argc, argv, type, port))
 		return -1;
 	
+	const int count = kill_process(argv[0]);
+	if (count > 0)
+		std::cout << "INFO: total clean up " << count << " process." << std::endl;
+
 	std::cout << "INFO: decode engine master will serve on port:" << port << std::endl;
 
 	boost::shared_ptr<BbLauncher> bblauncher(new BbLauncher(2014,2014, argv[0]));

@@ -7,8 +7,13 @@
 #include <assert.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <signal.h>
 #include <dirent.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 namespace process_utility
 {
@@ -39,7 +44,7 @@ int kill_process(phandle)
 	return 0;
 }
 
-static int read_cmdline(char *restrict const dst, unsigned sz, unsigned pid){
+static int read_cmdline(char *const dst, unsigned sz, unsigned pid){
     char name[32];
     int fd;
     unsigned n = 0;
@@ -84,24 +89,26 @@ int kill_process(const char *name)
 
 	int count = 0;
 
+	const pid_t myself = getpid();
 	for (;;) 
 	{
 		ent = readdir(dp);
-		if(unlikely(unlikely(!ent) || unlikely(!ent->d_name))) return 0;
-		if(likely( likely(*ent->d_name > '0') && likely(*ent->d_name <= '9') ))
+		if(!ent || !ent->d_name) return 0;
+		if((*ent->d_name > '0') && (*ent->d_name <= '9') )
 		{
 			char cmd[255];
 			const pid_t pid = strtoul(ent->d_name, NULL, 10);	
-			if (read_cmdline(cmd, sizeof(cmd), pid))
+			if (pid != myself && read_cmdline(cmd, sizeof(cmd), pid))
 			{
 				char cmdbk[255];
 				strcpy(cmdbk, cmd);
 				char *p = strstr(cmd, " ");
 				if (p) *p = '\0';
-				if (!strcmp(basename(cmd), name))
+				if (!strcmp(basename(cmd), basename(name)))
 				{
 					std::cout << "INFO: kill process " << pid << " command line:" << cmdbk << std::endl; 
 					count++;
+					kill(pid, SIGKILL);
 				}
 			}
 		}

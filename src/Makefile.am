@@ -51,7 +51,7 @@ gen-cpp/BulletinBoard.cpp gen-cpp/BulletinBoard.h gen-cpp/BulletinBoard_server.s
 
 
 AM_CPPFLAGS = $(BOOST_CPPFLAGS) $(LIBEVENT_CPPFLAGS) -I$(top_srcdir)/lib/cpp/src -Igen-cpp
-AM_CXXFLAGS = -Wall -Wextra -pedantic
+AM_CXXFLAGS = -Wall -Wextra -pedantic 
 AM_LDFLAGS = $(BOOST_LDFLAGS) $(LIBEVENT_LDFLAGS)
 
 clean-local:
@@ -62,4 +62,5 @@ server: all
 
 client: all
 	./DeClient
+
 
