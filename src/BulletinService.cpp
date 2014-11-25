@@ -46,14 +46,15 @@ private:
 
 int bulletin_service(int argc, char **argv)
 {
-	uint16_t port, start, stop;
-	ServerType_t type;
-	if (parseCommandLine(argc, argv, type, port))
+	CommandLineParser parser;
+	if (parser.parse(argc, argv))
 		return -1;
+
+	const uint16_t port = parser.get_my_port();
+	const uint16_t start = parser.get_worker_port_start();
+	const uint16_t stop = parser.get_worker_port_stop();
+
 	
-	// TODO start, stop 
-	start = 1980;
-	stop = 2980;
 	std::cout << "INFO: bulletin board will serve on port:" << port << std::endl;
 	std::cout << "INFO: decode engine instance port range [" << start << ", " << stop << "]" << std::endl;
 

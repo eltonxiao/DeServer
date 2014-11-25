@@ -40,11 +40,12 @@ class DecodeEngineHandler : public DecodeEngineIf {
 
 int worker_service(int argc, char **argv)
 {
-	uint16_t port;
-	ServerType_t type;
-	if (parseCommandLine(argc, argv, type, port))
+	CommandLineParser parser;
+	if (parser.parse(argc, argv))
 		return -1;
 	
+	const uint16_t port = parser.get_my_port();
+
 	std::cout << "INFO: decode engine will serve on port:" << port << std::endl;
 
 

@@ -49,10 +49,11 @@ private:
 
 int master_service(int argc, char **argv)
 {
-	uint16_t port;
-	ServerType_t type;
-	if (parseCommandLine(argc, argv, type, port))
+	CommandLineParser parser;
+	if (parser.parse(argc, argv))
 		return -1;
+
+	const uint16_t port = parser.get_my_port();
 	
 	const int count = kill_process(argv[0]);
 	if (count > 0)
@@ -60,7 +61,12 @@ int master_service(int argc, char **argv)
 
 	std::cout << "INFO: decode engine master will serve on port:" << port << std::endl;
 
-	boost::shared_ptr<BbLauncher> bblauncher(new BbLauncher(2014,2014, argv[0]));
+	boost::shared_ptr<BbLauncher> bblauncher(new BbLauncher(parser.get_slave_port_start(),
+								parser.get_slave_port_stop(),
+								argv[0],
+								parser.get_worker_port_start(),
+								parser.get_worker_port_stop()));
+
 	boost::shared_ptr<BulletinBoardIf> bbif(bblauncher->LaunchBulletin());
 	if (!bbif.get())
 	{
@@ -114,12 +120,11 @@ int master_service(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-	uint16_t port;
-	ServerType_t type;
-	if (parseCommandLine(argc, argv, type, port))
+	CommandLineParser parser;
+	if (parser.parse(argc, argv))
 		return -1;
 	
-	switch (type)
+	switch (parser.get_type())
 	{
 	case ST_SLAVE:
 		return bulletin_service(argc, argv);

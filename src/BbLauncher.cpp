@@ -31,10 +31,12 @@ private:
 	boost::shared_ptr<TTransport> transport_;
 };
 
-BbLauncher::BbLauncher(uint16_t start,  uint16_t stop, const char *image)
+BbLauncher::BbLauncher(uint16_t start,  uint16_t stop, const char *image, uint16_t worker_start, uint16_t worker_stop)
 	:portRange_(std::min(start,stop), std::max(start,stop)),
 	image_(image),
-	lastPort_(portRange_.second)
+	lastPort_(portRange_.second),
+	worker_start_(worker_start),
+	worker_stop_(worker_stop)
 {
 }
 
@@ -139,14 +141,14 @@ void BbLauncher::freePort(uint16_t port)
 
 phandle BbLauncher::createProcess(uint16_t port)
 {
-	char buffer [34];
-	sprintf(buffer, "%d", (int)port);
-	//itoa(port, buffer, 10);
-//	char *argv[] = {(char *)0, "-t", "slave", "-p", buffer, (char *)0};
-//	argv[0] = (char*)image_.data();
+	char bufferp[34];
+	sprintf(bufferp, "%d", (int)port);
+
+	char bufferw[68];
+	sprintf(bufferw, "%d:%d", (int)worker_start_, (int)worker_stop_);
 	
 #pragma GCC diagnostic ignored "-Wwrite-strings"
-	char *argv[] = {(char*)image_.data(), "-t", "slave", "-p", buffer, (char *)0};
+	char *argv[] = {(char*)image_.data(), "-t", "slave", "-p", bufferp, "-wp", bufferw, (char *)0};
 	
 	return create_process(image_.data(), argv);
 }
