@@ -21,7 +21,7 @@ static inline int extract_port_range(const char *str, uint16_t &start, uint16_t 
 	char *pch = strtok(bak, ",.:-");
 	const uint16_t _start = pch ? atoi(pch): 0;
 
-	pch = strtok(bak, ",.:-");
+	pch = strtok(0, ",.:-");
 	const uint16_t _stop = pch ? atoi(pch): 0;
 
 	start = std::min(_start, _stop);

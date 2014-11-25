@@ -67,7 +67,7 @@ BulletinBoardIf *BbLauncher::LaunchBulletin(uint16_t *pport)
 
 		boost::thread::yield();	
 		
-		cout << "INFO: try connect to (" << handle << ": " << port <<") again..." << endl;
+//		cout << "INFO: try connect to (" << handle << ": " << port <<") again..." << endl;
 	}
 
 	if (!instance)
@@ -90,7 +90,7 @@ BulletinBoardIf *BbLauncher::connect(uint16_t port)
 		transport->open();
 
 	} catch (TException& tx) {
-		cout << "ERROR: " << tx.what() << endl;
+//		cout << "ERROR: " << tx.what() << endl;
 		delete client;
 		client = 0;
 	}

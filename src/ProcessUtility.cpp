@@ -129,10 +129,11 @@ bool check_alive(phandle p)
 	int Stat;
         const pid_t wpid = waitpid(p, &Stat, WNOHANG); // avoid zombie
  
-std::cout << "DBG: check alive: waitpid: wpid =" << wpid << "Stat" << Stat << std::endl;
-std::cout << "DBG: check alive: waitpid: WIFEXITED(Stat) " << WIFEXITED(Stat) << std::endl;
-std::cout << "DBG: check alive: waitpid: WIFSIGNALED(Stat) " << WIFSIGNALED(Stat) << std::endl;
-std::cout << "DBG: check alive: waitpid: kill " << kill(p, 0) << std::endl;
+	(void)wpid;
+//std::cout << "DBG: check alive: waitpid: wpid =" << wpid << "Stat " << Stat << std::endl;
+//std::cout << "DBG: check alive: waitpid: WIFEXITED(Stat) " << WIFEXITED(Stat) << std::endl;
+//std::cout << "DBG: check alive: waitpid: WIFSIGNALED(Stat) " << WIFSIGNALED(Stat) << std::endl;
+//std::cout << "DBG: check alive: waitpid: kill " << kill(p, 0) << std::endl;
 
 	return !kill(p, 0);
 }

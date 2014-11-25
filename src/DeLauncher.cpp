@@ -83,7 +83,7 @@ DecodeEngineIf *DeLauncher::connect(uint16_t port)
 		transport->open();
 
 	} catch (TException& tx) {
-		cout << "ERROR: " << tx.what() << endl;
+	//	cout << "ERROR: " << tx.what() << endl;
 		delete client;
 		client = 0;
 	}

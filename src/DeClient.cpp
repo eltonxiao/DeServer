@@ -54,7 +54,7 @@ DecodeEngineIf *connect(uint16_t port, const char *host = "localhost")
 }
 int main(int argc, char **argv)
 {	
-	uint16_t port = 10000;
+	uint16_t port = 1980;
 
 	if (argc > 1) 
 		port = atoi(argv[1]);
