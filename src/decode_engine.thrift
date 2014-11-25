@@ -38,7 +38,21 @@ namespace php dengine
 namespace perl dengine
 
 
+typedef i64 handle_t
+
+exception DException {
+  1: i32 code
+}
+
 service DecodeEngine {
+
+   handle_t ctor() throws(1: DException e),
+   oneway void dtor(1: handle_t myself),
+
+   /**
+   * each function take handle_t as the first argument
+   */
+   string sample_decode_function_echo(1: handle_t myself, 2: string msg),
 
    void ping(),
 

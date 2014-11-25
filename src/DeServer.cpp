@@ -30,8 +30,21 @@ using namespace apache::thrift::server;
 using namespace dengine;
 
 class DecodeEngineProxyHandler : public DecodeEngineIf {
- public:
-  DecodeEngineProxyHandler(const boost::shared_ptr<DeLauncherIf> &launcher) : launcher_(launcher) {}
+public:
+	DecodeEngineProxyHandler(const boost::shared_ptr<DeLauncherIf> &launcher) : launcher_(launcher) {}
+
+	handle_t ctor() throw(DException)
+	{
+		return 0;
+	}
+ 
+	void dtor(const handle_t myself)
+	{
+	}
+
+	void sample_decode_function_echo(std::string& _return, const handle_t myself, const std::string& msg) 
+	{
+	}
 
   void ping() {
     std::cout << "ping()" << std::endl;
