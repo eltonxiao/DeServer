@@ -104,7 +104,8 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_DeClient_OBJECTS = DeClient.$(OBJEXT)
+am_DeClient_OBJECTS = MyDecodeEngineClient.$(OBJEXT) \
+	DeClient.$(OBJEXT)
 DeClient_OBJECTS = $(am_DeClient_OBJECTS)
 DeClient_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
 am_DeServer_OBJECTS = BbLauncher.$(OBJEXT) DeLauncher.$(OBJEXT) \
@@ -340,6 +341,7 @@ DeServer_LDADD = /usr/local/lib/libthrift.la \
 	-lboost_thread
 
 DeClient_SOURCES = \
+	MyDecodeEngineClient.cpp \
 	DeClient.cpp
 
 DeClient_LDADD = /usr/local/lib/libthrift.la \
@@ -488,6 +490,7 @@ include ./$(DEPDIR)/DeClient.Po
 include ./$(DEPDIR)/DeLauncher.Po
 include ./$(DEPDIR)/DeLauncherRemote.Po
 include ./$(DEPDIR)/DeServer.Po
+include ./$(DEPDIR)/MyDecodeEngineClient.Po
 include ./$(DEPDIR)/ProcessUtility.Po
 include ./$(DEPDIR)/WorkerService.Po
 include gen-cpp/$(DEPDIR)/BulletinBoard.Plo

@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <string>
+#include <time.h>
 
 #include "./gen-cpp/DecodeEngine.h"
 #include "DeLauncherIf.h"
@@ -31,19 +32,53 @@ using namespace dengine;
 
 class DecodeEngineProxyHandler : public DecodeEngineIf {
 public:
-	DecodeEngineProxyHandler(const boost::shared_ptr<DeLauncherIf> &launcher) : launcher_(launcher) {}
+	DecodeEngineProxyHandler(const boost::shared_ptr<DeLauncherIf> &launcher) : launcher_(launcher)
+	{
+		const int port_count = 0x10000;
+		handlers_ = new HandleEntry[port_count];
+		memset(handlers_, 0, port_count * sizeof(HandleEntry));
+	}
+
+	~DecodeEngineProxyHandler()
+	{
+		delete[] handlers_;
+	}
 
 	handle_t ctor() throw(DException)
 	{
-		return 0;
+		uint16_t port = 0;
+		DecodeEngineIf *engine = launcher_->LaunchDEngine(&port);
+		if (!engine)
+			throw DException();
+
+		
+		handlers_[port].handle = make_handle(port);
+		handlers_[port].handler = engine;
+		
+		return handlers_[port].handle;
 	}
  
 	void dtor(const handle_t myself)
 	{
+		if (!get_handler(myself))
+			throw DException();
+
+		const uint16_t port = extrac_port(myself);
+		delete handlers_[port].handler;
+		handlers_[port].handler = 0;
+		handlers_[port].handle = 0;
 	}
 
 	void sample_decode_function_echo(std::string& _return, const handle_t myself, const std::string& msg) 
 	{
+		if (!get_handler(myself))
+			throw DException();
+
+
+		std::cout << "DBG: sample_decode_function_echo in proxy" << std::endl;
+
+
+		get_handler(myself)->sample_decode_function_echo(_return, myself, msg); 
 	}
 
   void ping() {
@@ -56,8 +91,35 @@ public:
   }
 
 private:
-	boost::shared_ptr<DeLauncherIf> launcher_;
+	static inline handle_t make_handle(uint16_t port)
+	{
+		time_t timer;
+		time(&timer);
+		return (handle_t)timer << 16 | port;	
+	}
+	
+	static inline uint16_t extrac_port(handle_t handle)
+	{
+		return handle;
+	}
 
+	inline DecodeEngineIf *get_handler(handle_t handle)
+	{
+		const uint16_t port = extrac_port(handle);
+		if (handlers_[port].handle == handle)
+			return handlers_[port].handler;
+		else
+			return 0;
+	}
+
+	struct HandleEntry {
+		DecodeEngineIf *handler;
+		handle_t handle; 
+	};
+
+
+	boost::shared_ptr<DeLauncherIf> launcher_;
+	HandleEntry *handlers_; // don't worry about false share, since most of time is read operation.
 };
 
 int master_service(int argc, char **argv)

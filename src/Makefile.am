@@ -35,6 +35,7 @@ DeServer_LDADD = /usr/local/lib/libthrift.la \
 
 
 DeClient_SOURCES = \
+	MyDecodeEngineClient.cpp \
 	DeClient.cpp
 
 DeClient_LDADD = /usr/local/lib/libthrift.la \

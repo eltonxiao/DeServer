@@ -23,17 +23,38 @@ using namespace apache::thrift::server;
 using namespace dengine;
 
 class DecodeEngineHandler : public DecodeEngineIf {
- public:
-  DecodeEngineHandler() {}
+public:
+	DecodeEngineHandler() {}
 
-  void ping() {
-    std::cout << "ping()" << std::endl;
-  }
+	handle_t ctor() throw(DException)
+	{
+		std::cout << "DBG: worker's ctor, here we can intialize wireshark lib" << std::endl;
+		return 0;	
+	}
+ 
+	void dtor(const handle_t)
+	{
+		std::cout << "DBG: worker's dtor" << std::endl;
+	}
 
-  int32_t add(const int32_t n1, const int32_t n2) {
-    std::cout << "add(" << n1 << ", " << n2 << ")" << std::endl;
-    return n1 + n2;
-  }
+	void sample_decode_function_echo(std::string& _return, const handle_t, const std::string& msg) 
+	{
+
+		std::cout << "DBG: sample_decode_function_echo in worker. entry point for call to wireshark lib" << std::endl;
+		std::cout << "DBG: msg from client is: " << msg << std::endl;
+
+		_return = "This is echo msg from server, your message is:";
+		_return += msg;
+	}
+
+	void ping() {
+		std::cout << "ping()" << std::endl;
+	}
+
+	int32_t add(const int32_t n1, const int32_t n2) {
+		std::cout << "add(" << n1 << ", " << n2 << ")" << std::endl;
+		return n1 + n2;
+	}
 
 };
 
