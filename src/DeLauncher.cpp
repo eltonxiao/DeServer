@@ -54,6 +54,7 @@ DecodeEngineIf *DeLauncher::LaunchDEngine(uint16_t *pport)
 
 	DecodeEngineIf *instance = 0;
 
+	usleep(40 * 1000);
 	while (true)
 	{
 		instance = connect(port);	

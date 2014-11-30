@@ -50,11 +50,19 @@ public:
 		DecodeEngineIf *engine = launcher_->LaunchDEngine(&port);
 		if (!engine)
 			throw DException();
-
 		
-		handlers_[port].handle = make_handle(port);
+		// clean up garbage, no need call its dtor, since the worker server must have exited
+		delete handlers_[port].handler;
+		handlers_[port].handler = 0;
+
+		const handle_t myself = make_handle(port);
+		handlers_[port].handle = myself; 
 		handlers_[port].handler = engine;
 		
+		std::cout << "DBG: ctor in proxy" << std::endl;
+		get_handler(myself)->ctor();
+		std::cout << "DBG: ctor in proxy, after calli to worker" << std::endl;
+
 		return handlers_[port].handle;
 	}
  
@@ -62,6 +70,10 @@ public:
 	{
 		if (!get_handler(myself))
 			throw DException();
+
+		std::cout << "DBG: dtor in proxy" << std::endl;
+		get_handler(myself)->dtor(myself);
+		std::cout << "DBG: dtor in proxy, after calli to worker" << std::endl;
 
 		const uint16_t port = extrac_port(myself);
 		delete handlers_[port].handler;
@@ -76,7 +88,6 @@ public:
 
 
 		std::cout << "DBG: sample_decode_function_echo in proxy" << std::endl;
-
 
 		get_handler(myself)->sample_decode_function_echo(_return, myself, msg); 
 	}

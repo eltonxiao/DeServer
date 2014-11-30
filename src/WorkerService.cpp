@@ -22,6 +22,8 @@ using namespace apache::thrift::server;
 
 using namespace dengine;
 
+static TSimpleServer *g_server = 0;
+
 class DecodeEngineHandler : public DecodeEngineIf {
 public:
 	DecodeEngineHandler() {}
@@ -35,6 +37,8 @@ public:
 	void dtor(const handle_t)
 	{
 		std::cout << "DBG: worker's dtor" << std::endl;
+		g_server->stop();
+		std::cout << "DBG: worker's dtor: stop command was called" << std::endl;
 	}
 
 	void sample_decode_function_echo(std::string& _return, const handle_t, const std::string& msg) 
@@ -80,9 +84,13 @@ int worker_service(int argc, char **argv)
 		       transportFactory,
 		       protocolFactory);
 
+
 	std::cout << "INFO: Starting decode engine..." << std::endl;
+	g_server = &server; 
 	server.serve();
+	g_server = 0;
 	std::cout << "INFO: Decode engine done." << std::endl;
+
 	return 0;
 }
 

@@ -20,6 +20,8 @@ namespace process_utility
 
 phandle create_process(const char *path, char *const argv[])
 {
+	signal(SIGCHLD, SIG_IGN); //ignore child fate, don't let it become zombie
+
 	pid_t pid;
 	int status;
 	posix_spawnattr_t attr;
