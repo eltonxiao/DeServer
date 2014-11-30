@@ -41,5 +41,6 @@ aa.txt
 autom4te.cache/requests
 autom4te.cache/*
 config.log
+src/DecodeEngine/.*
 
 

@@ -111,7 +111,21 @@ DeClient_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
 am_DeServer_OBJECTS = BbLauncher.$(OBJEXT) DeLauncher.$(OBJEXT) \
 	BulletinService.$(OBJEXT) CommandLineParser.$(OBJEXT) \
 	DeLauncherRemote.$(OBJEXT) DeServer.$(OBJEXT) \
-	ProcessUtility.$(OBJEXT) WorkerService.$(OBJEXT)
+	ProcessUtility.$(OBJEXT) WorkerService.$(OBJEXT) \
+	DecodeEngine/DetailResultsCompiler.$(OBJEXT) \
+	DecodeEngine/DnsResolveName.$(OBJEXT) \
+	DecodeEngine/H323Common.$(OBJEXT) \
+	DecodeEngine/PreScanDynamicPorts.$(OBJEXT) \
+	DecodeEngine/PreScanProtocol.$(OBJEXT) \
+	DecodeEngine/PreScanProtocolH245.$(OBJEXT) \
+	DecodeEngine/PreScanProtocolH323.$(OBJEXT) \
+	DecodeEngine/PreScanProtocolMgcp.$(OBJEXT) \
+	DecodeEngine/PreScanProtocolRtp.$(OBJEXT) \
+	DecodeEngine/PreScanProtocolSip.$(OBJEXT) \
+	DecodeEngine/StandaloneDecoder.$(OBJEXT) \
+	DecodeEngine/WinsResolveName.$(OBJEXT) \
+	DecodeEngine/wtapfile.$(OBJEXT) \
+	DecodeEngine/DecodePreScan.$(OBJEXT)
 DeServer_OBJECTS = $(am_DeServer_OBJECTS)
 DeServer_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
 AM_V_P = $(am__v_P_$(V))
@@ -204,13 +218,13 @@ AUTOMAKE = ${SHELL} /home/elton/shawn/bundle/DeServer/missing automake-1.14
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O0
+CFLAGS = -g -O2
 CPP = gcc -E
 CPPFLAGS = 
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O0
+CXXFLAGS = -g -O2
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -334,7 +348,21 @@ DeServer_SOURCES = \
 	DeLauncherRemote.cpp \
 	DeServer.cpp \
 	ProcessUtility.cpp \
-	WorkerService.cpp
+	WorkerService.cpp \
+	DecodeEngine/DetailResultsCompiler.cpp     \
+	DecodeEngine/DnsResolveName.cpp            \
+	DecodeEngine/H323Common.cxx                \
+	DecodeEngine/PreScanDynamicPorts.cpp       \
+	DecodeEngine/PreScanProtocol.cpp           \
+	DecodeEngine/PreScanProtocolH245.cpp       \
+	DecodeEngine/PreScanProtocolH323.cpp       \
+	DecodeEngine/PreScanProtocolMgcp.cpp       \
+	DecodeEngine/PreScanProtocolRtp.cpp        \
+	DecodeEngine/PreScanProtocolSip.cpp        \
+	DecodeEngine/StandaloneDecoder.cpp         \
+	DecodeEngine/WinsResolveName.cpp           \
+	DecodeEngine/wtapfile.cpp                  \
+	DecodeEngine/DecodePreScan.cpp	
 
 DeServer_LDADD = /usr/local/lib/libthrift.la \
 	libdegencpp.la \
@@ -358,7 +386,7 @@ AM_LDFLAGS = $(BOOST_LDFLAGS) $(LIBEVENT_LDFLAGS)
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .cpp .lo .o .obj
+.SUFFIXES: .cpp .cxx .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -470,6 +498,48 @@ clean-binPROGRAMS:
 DeClient$(EXEEXT): $(DeClient_OBJECTS) $(DeClient_DEPENDENCIES) $(EXTRA_DeClient_DEPENDENCIES) 
 	@rm -f DeClient$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(DeClient_OBJECTS) $(DeClient_LDADD) $(LIBS)
+DecodeEngine/$(am__dirstamp):
+	@$(MKDIR_P) DecodeEngine
+	@: > DecodeEngine/$(am__dirstamp)
+DecodeEngine/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) DecodeEngine/$(DEPDIR)
+	@: > DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/DetailResultsCompiler.$(OBJEXT):  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/DnsResolveName.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/H323Common.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/PreScanDynamicPorts.$(OBJEXT):  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/PreScanProtocol.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/PreScanProtocolH245.$(OBJEXT):  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/PreScanProtocolH323.$(OBJEXT):  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/PreScanProtocolMgcp.$(OBJEXT):  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/PreScanProtocolRtp.$(OBJEXT):  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/PreScanProtocolSip.$(OBJEXT):  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/StandaloneDecoder.$(OBJEXT):  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/WinsResolveName.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/wtapfile.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/DecodePreScan.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
 
 DeServer$(EXEEXT): $(DeServer_OBJECTS) $(DeServer_DEPENDENCIES) $(EXTRA_DeServer_DEPENDENCIES) 
 	@rm -f DeServer$(EXEEXT)
@@ -477,6 +547,7 @@ DeServer$(EXEEXT): $(DeServer_OBJECTS) $(DeServer_DEPENDENCIES) $(EXTRA_DeServer
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f DecodeEngine/*.$(OBJEXT)
 	-rm -f gen-cpp/*.$(OBJEXT)
 	-rm -f gen-cpp/*.lo
 
@@ -493,6 +564,20 @@ include ./$(DEPDIR)/DeServer.Po
 include ./$(DEPDIR)/MyDecodeEngineClient.Po
 include ./$(DEPDIR)/ProcessUtility.Po
 include ./$(DEPDIR)/WorkerService.Po
+include DecodeEngine/$(DEPDIR)/DecodePreScan.Po
+include DecodeEngine/$(DEPDIR)/DetailResultsCompiler.Po
+include DecodeEngine/$(DEPDIR)/DnsResolveName.Po
+include DecodeEngine/$(DEPDIR)/H323Common.Po
+include DecodeEngine/$(DEPDIR)/PreScanDynamicPorts.Po
+include DecodeEngine/$(DEPDIR)/PreScanProtocol.Po
+include DecodeEngine/$(DEPDIR)/PreScanProtocolH245.Po
+include DecodeEngine/$(DEPDIR)/PreScanProtocolH323.Po
+include DecodeEngine/$(DEPDIR)/PreScanProtocolMgcp.Po
+include DecodeEngine/$(DEPDIR)/PreScanProtocolRtp.Po
+include DecodeEngine/$(DEPDIR)/PreScanProtocolSip.Po
+include DecodeEngine/$(DEPDIR)/StandaloneDecoder.Po
+include DecodeEngine/$(DEPDIR)/WinsResolveName.Po
+include DecodeEngine/$(DEPDIR)/wtapfile.Po
 include gen-cpp/$(DEPDIR)/BulletinBoard.Plo
 include gen-cpp/$(DEPDIR)/DecodeEngine.Plo
 include gen-cpp/$(DEPDIR)/decode_engine_constants.Plo
@@ -515,6 +600,30 @@ include gen-cpp/$(DEPDIR)/decode_engine_types.Plo
 #	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 .cpp.lo:
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
+	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Plo
+#	$(AM_V_CXX)source='$<' object='$@' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(LTCXXCOMPILE) -c -o $@ $<
+
+.cxx.o:
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ $<
+
+.cxx.obj:
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.cxx.lo:
 	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
 	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
 	$(am__mv) $$depbase.Tpo $$depbase.Plo
@@ -644,6 +753,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+	-rm -f DecodeEngine/$(am__dirstamp)
 	-rm -f gen-cpp/$(DEPDIR)/$(am__dirstamp)
 	-rm -f gen-cpp/$(am__dirstamp)
 
@@ -656,7 +767,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool clean-local \
 	clean-noinstLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) gen-cpp/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) DecodeEngine/$(DEPDIR) gen-cpp/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -702,7 +813,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) gen-cpp/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) DecodeEngine/$(DEPDIR) gen-cpp/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

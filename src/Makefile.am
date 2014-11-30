@@ -27,7 +27,22 @@ DeServer_SOURCES = \
 	DeLauncherRemote.cpp \
 	DeServer.cpp \
 	ProcessUtility.cpp \
-	WorkerService.cpp
+	WorkerService.cpp \
+	DecodeEngine/DetailResultsCompiler.cpp     \
+	DecodeEngine/DnsResolveName.cpp            \
+	DecodeEngine/H323Common.cxx                \
+	DecodeEngine/PreScanDynamicPorts.cpp       \
+	DecodeEngine/PreScanProtocol.cpp           \
+	DecodeEngine/PreScanProtocolH245.cpp       \
+	DecodeEngine/PreScanProtocolH323.cpp       \
+	DecodeEngine/PreScanProtocolMgcp.cpp       \
+	DecodeEngine/PreScanProtocolRtp.cpp        \
+	DecodeEngine/PreScanProtocolSip.cpp        \
+	DecodeEngine/StandaloneDecoder.cpp         \
+	DecodeEngine/WinsResolveName.cpp           \
+	DecodeEngine/wtapfile.cpp                  \
+	DecodeEngine/DecodePreScan.cpp	
+
 
 DeServer_LDADD = /usr/local/lib/libthrift.la \
 	libdegencpp.la \
