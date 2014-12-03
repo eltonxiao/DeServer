@@ -42,5 +42,8 @@ autom4te.cache/requests
 autom4te.cache/*
 config.log
 src/DecodeEngine/.*
-
+src/DecodeEngine/config.h.bak
+src/bak/
+src/glib-2.42.1/
+src/glib/
 

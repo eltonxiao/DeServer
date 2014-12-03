@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = subdir-objects serial-tests
 
-noinst_LTLIBRARIES = libdegencpp.la
+noinst_LTLIBRARIES = libdegencpp.la libde.la
 nodist_libdegencpp_la_SOURCES = \
 	gen-cpp/BulletinBoard.cpp \
 	gen-cpp/BulletinBoard.h \
@@ -14,20 +14,7 @@ nodist_libdegencpp_la_SOURCES = \
 
 libdegencpp_la_LIBADD = /usr/local/lib/libthrift.la
 
-
-bin_PROGRAMS = \
-	DeServer \
-	DeClient
-
-DeServer_SOURCES = \
-	BbLauncher.cpp \
-	DeLauncher.cpp \
-	BulletinService.cpp \
-	CommandLineParser.cpp \
-	DeLauncherRemote.cpp \
-	DeServer.cpp \
-	ProcessUtility.cpp \
-	WorkerService.cpp \
+nodist_libde_la_SOURCES = \
 	DecodeEngine/DetailResultsCompiler.cpp     \
 	DecodeEngine/DnsResolveName.cpp            \
 	DecodeEngine/H323Common.cxx                \
@@ -43,9 +30,31 @@ DeServer_SOURCES = \
 	DecodeEngine/wtapfile.cpp                  \
 	DecodeEngine/DecodePreScan.cpp	
 
+libde_la_CPPFLAGS = \
+         -I ethereal -I ethereal/epan -I ethereal/wiretap -I ethereal/epan/dissectors \
+         -I glib-2.42.1  -I glib-2.42.1/glib  -I glib-2.42.1/gmodule  -I glib-2.42.1/gobject 
+
+
+#         -I glib  -I glib/glib  -I glib/gmodule  -I glib/gobject 
+
+bin_PROGRAMS = \
+	DeServer \
+	DeClient
+
+DeServer_SOURCES = \
+	BbLauncher.cpp \
+	DeLauncher.cpp \
+	BulletinService.cpp \
+	CommandLineParser.cpp \
+	DeLauncherRemote.cpp \
+	DeServer.cpp \
+	ProcessUtility.cpp \
+	WorkerService.cpp
+
 
 DeServer_LDADD = /usr/local/lib/libthrift.la \
 	libdegencpp.la \
+	libde.la \
 	-lboost_thread
 
 

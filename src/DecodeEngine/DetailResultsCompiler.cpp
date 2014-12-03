@@ -17,7 +17,7 @@
 //#endif
 
 #include "PreScanProtocol.h"
-#include "wtapFile.h"
+#include "wtapfile.h"
 #include "DetailResultsCompiler.h"
 
 extern "C"

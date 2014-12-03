@@ -92,16 +92,33 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libdegencpp_la_DEPENDENCIES = /usr/local/lib/libthrift.la
+libde_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-nodist_libdegencpp_la_OBJECTS = gen-cpp/BulletinBoard.lo \
-	gen-cpp/decode_engine_constants.lo gen-cpp/DecodeEngine.lo \
-	gen-cpp/decode_engine_types.lo
-libdegencpp_la_OBJECTS = $(nodist_libdegencpp_la_OBJECTS)
+nodist_libde_la_OBJECTS =  \
+	DecodeEngine/libde_la-DetailResultsCompiler.lo \
+	DecodeEngine/libde_la-DnsResolveName.lo \
+	DecodeEngine/libde_la-H323Common.lo \
+	DecodeEngine/libde_la-PreScanDynamicPorts.lo \
+	DecodeEngine/libde_la-PreScanProtocol.lo \
+	DecodeEngine/libde_la-PreScanProtocolH245.lo \
+	DecodeEngine/libde_la-PreScanProtocolH323.lo \
+	DecodeEngine/libde_la-PreScanProtocolMgcp.lo \
+	DecodeEngine/libde_la-PreScanProtocolRtp.lo \
+	DecodeEngine/libde_la-PreScanProtocolSip.lo \
+	DecodeEngine/libde_la-StandaloneDecoder.lo \
+	DecodeEngine/libde_la-WinsResolveName.lo \
+	DecodeEngine/libde_la-wtapfile.lo \
+	DecodeEngine/libde_la-DecodePreScan.lo
+libde_la_OBJECTS = $(nodist_libde_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+libdegencpp_la_DEPENDENCIES = /usr/local/lib/libthrift.la
+nodist_libdegencpp_la_OBJECTS = gen-cpp/BulletinBoard.lo \
+	gen-cpp/decode_engine_constants.lo gen-cpp/DecodeEngine.lo \
+	gen-cpp/decode_engine_types.lo
+libdegencpp_la_OBJECTS = $(nodist_libdegencpp_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_DeClient_OBJECTS = MyDecodeEngineClient.$(OBJEXT) \
@@ -111,23 +128,10 @@ DeClient_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
 am_DeServer_OBJECTS = BbLauncher.$(OBJEXT) DeLauncher.$(OBJEXT) \
 	BulletinService.$(OBJEXT) CommandLineParser.$(OBJEXT) \
 	DeLauncherRemote.$(OBJEXT) DeServer.$(OBJEXT) \
-	ProcessUtility.$(OBJEXT) WorkerService.$(OBJEXT) \
-	DecodeEngine/DetailResultsCompiler.$(OBJEXT) \
-	DecodeEngine/DnsResolveName.$(OBJEXT) \
-	DecodeEngine/H323Common.$(OBJEXT) \
-	DecodeEngine/PreScanDynamicPorts.$(OBJEXT) \
-	DecodeEngine/PreScanProtocol.$(OBJEXT) \
-	DecodeEngine/PreScanProtocolH245.$(OBJEXT) \
-	DecodeEngine/PreScanProtocolH323.$(OBJEXT) \
-	DecodeEngine/PreScanProtocolMgcp.$(OBJEXT) \
-	DecodeEngine/PreScanProtocolRtp.$(OBJEXT) \
-	DecodeEngine/PreScanProtocolSip.$(OBJEXT) \
-	DecodeEngine/StandaloneDecoder.$(OBJEXT) \
-	DecodeEngine/WinsResolveName.$(OBJEXT) \
-	DecodeEngine/wtapfile.$(OBJEXT) \
-	DecodeEngine/DecodePreScan.$(OBJEXT)
+	ProcessUtility.$(OBJEXT) WorkerService.$(OBJEXT)
 DeServer_OBJECTS = $(am_DeServer_OBJECTS)
-DeServer_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la
+DeServer_DEPENDENCIES = /usr/local/lib/libthrift.la libdegencpp.la \
+	libde.la
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -180,8 +184,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(nodist_libdegencpp_la_SOURCES) $(DeClient_SOURCES) \
-	$(DeServer_SOURCES)
+SOURCES = $(nodist_libde_la_SOURCES) $(nodist_libdegencpp_la_SOURCES) \
+	$(DeClient_SOURCES) $(DeServer_SOURCES)
 DIST_SOURCES = $(DeClient_SOURCES) $(DeServer_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -328,7 +332,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = subdir-objects serial-tests
-noinst_LTLIBRARIES = libdegencpp.la
+noinst_LTLIBRARIES = libdegencpp.la libde.la
 nodist_libdegencpp_la_SOURCES = \
 	gen-cpp/BulletinBoard.cpp \
 	gen-cpp/BulletinBoard.h \
@@ -340,15 +344,7 @@ nodist_libdegencpp_la_SOURCES = \
 	gen-cpp/decode_engine_types.h
 
 libdegencpp_la_LIBADD = /usr/local/lib/libthrift.la
-DeServer_SOURCES = \
-	BbLauncher.cpp \
-	DeLauncher.cpp \
-	BulletinService.cpp \
-	CommandLineParser.cpp \
-	DeLauncherRemote.cpp \
-	DeServer.cpp \
-	ProcessUtility.cpp \
-	WorkerService.cpp \
+nodist_libde_la_SOURCES = \
 	DecodeEngine/DetailResultsCompiler.cpp     \
 	DecodeEngine/DnsResolveName.cpp            \
 	DecodeEngine/H323Common.cxx                \
@@ -364,8 +360,23 @@ DeServer_SOURCES = \
 	DecodeEngine/wtapfile.cpp                  \
 	DecodeEngine/DecodePreScan.cpp	
 
+libde_la_CPPFLAGS = \
+         -I ethereal -I ethereal/epan -I ethereal/wiretap -I ethereal/epan/dissectors \
+         -I glib-2.42.1  -I glib-2.42.1/glib  -I glib-2.42.1/gmodule  -I glib-2.42.1/gobject 
+
+DeServer_SOURCES = \
+	BbLauncher.cpp \
+	DeLauncher.cpp \
+	BulletinService.cpp \
+	CommandLineParser.cpp \
+	DeLauncherRemote.cpp \
+	DeServer.cpp \
+	ProcessUtility.cpp \
+	WorkerService.cpp
+
 DeServer_LDADD = /usr/local/lib/libthrift.la \
 	libdegencpp.la \
+	libde.la \
 	-lboost_thread
 
 DeClient_SOURCES = \
@@ -428,6 +439,53 @@ clean-noinstLTLIBRARIES:
 	  echo rm -f $${locs}; \
 	  rm -f $${locs}; \
 	}
+DecodeEngine/$(am__dirstamp):
+	@$(MKDIR_P) DecodeEngine
+	@: > DecodeEngine/$(am__dirstamp)
+DecodeEngine/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) DecodeEngine/$(DEPDIR)
+	@: > DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-DetailResultsCompiler.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-DnsResolveName.lo: DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-H323Common.lo: DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-PreScanDynamicPorts.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-PreScanProtocol.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-PreScanProtocolH245.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-PreScanProtocolH323.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-PreScanProtocolMgcp.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-PreScanProtocolRtp.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-PreScanProtocolSip.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-StandaloneDecoder.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-WinsResolveName.lo:  \
+	DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-wtapfile.lo: DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+DecodeEngine/libde_la-DecodePreScan.lo: DecodeEngine/$(am__dirstamp) \
+	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
+
+libde.la: $(libde_la_OBJECTS) $(libde_la_DEPENDENCIES) $(EXTRA_libde_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK)  $(libde_la_OBJECTS) $(libde_la_LIBADD) $(LIBS)
 gen-cpp/$(am__dirstamp):
 	@$(MKDIR_P) gen-cpp
 	@: > gen-cpp/$(am__dirstamp)
@@ -498,48 +556,6 @@ clean-binPROGRAMS:
 DeClient$(EXEEXT): $(DeClient_OBJECTS) $(DeClient_DEPENDENCIES) $(EXTRA_DeClient_DEPENDENCIES) 
 	@rm -f DeClient$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(DeClient_OBJECTS) $(DeClient_LDADD) $(LIBS)
-DecodeEngine/$(am__dirstamp):
-	@$(MKDIR_P) DecodeEngine
-	@: > DecodeEngine/$(am__dirstamp)
-DecodeEngine/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) DecodeEngine/$(DEPDIR)
-	@: > DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/DetailResultsCompiler.$(OBJEXT):  \
-	DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/DnsResolveName.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/H323Common.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/PreScanDynamicPorts.$(OBJEXT):  \
-	DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/PreScanProtocol.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/PreScanProtocolH245.$(OBJEXT):  \
-	DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/PreScanProtocolH323.$(OBJEXT):  \
-	DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/PreScanProtocolMgcp.$(OBJEXT):  \
-	DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/PreScanProtocolRtp.$(OBJEXT):  \
-	DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/PreScanProtocolSip.$(OBJEXT):  \
-	DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/StandaloneDecoder.$(OBJEXT):  \
-	DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/WinsResolveName.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/wtapfile.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
-DecodeEngine/DecodePreScan.$(OBJEXT): DecodeEngine/$(am__dirstamp) \
-	DecodeEngine/$(DEPDIR)/$(am__dirstamp)
 
 DeServer$(EXEEXT): $(DeServer_OBJECTS) $(DeServer_DEPENDENCIES) $(EXTRA_DeServer_DEPENDENCIES) 
 	@rm -f DeServer$(EXEEXT)
@@ -548,6 +564,7 @@ DeServer$(EXEEXT): $(DeServer_OBJECTS) $(DeServer_DEPENDENCIES) $(EXTRA_DeServer
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f DecodeEngine/*.$(OBJEXT)
+	-rm -f DecodeEngine/*.lo
 	-rm -f gen-cpp/*.$(OBJEXT)
 	-rm -f gen-cpp/*.lo
 
@@ -564,20 +581,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MyDecodeEngineClient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProcessUtility.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/WorkerService.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/DecodePreScan.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/DetailResultsCompiler.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/DnsResolveName.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/H323Common.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/PreScanDynamicPorts.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/PreScanProtocol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/PreScanProtocolH245.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/PreScanProtocolH323.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/PreScanProtocolMgcp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/PreScanProtocolRtp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/PreScanProtocolSip.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/StandaloneDecoder.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/WinsResolveName.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/wtapfile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-DecodePreScan.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-DetailResultsCompiler.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-DnsResolveName.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-H323Common.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-PreScanDynamicPorts.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocol.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolH245.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolH323.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolMgcp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolRtp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolSip.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-StandaloneDecoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-WinsResolveName.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@DecodeEngine/$(DEPDIR)/libde_la-wtapfile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gen-cpp/$(DEPDIR)/BulletinBoard.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gen-cpp/$(DEPDIR)/DecodeEngine.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gen-cpp/$(DEPDIR)/decode_engine_constants.Plo@am__quote@
@@ -606,6 +623,104 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
+
+DecodeEngine/libde_la-DetailResultsCompiler.lo: DecodeEngine/DetailResultsCompiler.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-DetailResultsCompiler.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-DetailResultsCompiler.Tpo -c -o DecodeEngine/libde_la-DetailResultsCompiler.lo `test -f 'DecodeEngine/DetailResultsCompiler.cpp' || echo '$(srcdir)/'`DecodeEngine/DetailResultsCompiler.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-DetailResultsCompiler.Tpo DecodeEngine/$(DEPDIR)/libde_la-DetailResultsCompiler.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/DetailResultsCompiler.cpp' object='DecodeEngine/libde_la-DetailResultsCompiler.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-DetailResultsCompiler.lo `test -f 'DecodeEngine/DetailResultsCompiler.cpp' || echo '$(srcdir)/'`DecodeEngine/DetailResultsCompiler.cpp
+
+DecodeEngine/libde_la-DnsResolveName.lo: DecodeEngine/DnsResolveName.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-DnsResolveName.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-DnsResolveName.Tpo -c -o DecodeEngine/libde_la-DnsResolveName.lo `test -f 'DecodeEngine/DnsResolveName.cpp' || echo '$(srcdir)/'`DecodeEngine/DnsResolveName.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-DnsResolveName.Tpo DecodeEngine/$(DEPDIR)/libde_la-DnsResolveName.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/DnsResolveName.cpp' object='DecodeEngine/libde_la-DnsResolveName.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-DnsResolveName.lo `test -f 'DecodeEngine/DnsResolveName.cpp' || echo '$(srcdir)/'`DecodeEngine/DnsResolveName.cpp
+
+DecodeEngine/libde_la-H323Common.lo: DecodeEngine/H323Common.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-H323Common.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-H323Common.Tpo -c -o DecodeEngine/libde_la-H323Common.lo `test -f 'DecodeEngine/H323Common.cxx' || echo '$(srcdir)/'`DecodeEngine/H323Common.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-H323Common.Tpo DecodeEngine/$(DEPDIR)/libde_la-H323Common.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/H323Common.cxx' object='DecodeEngine/libde_la-H323Common.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-H323Common.lo `test -f 'DecodeEngine/H323Common.cxx' || echo '$(srcdir)/'`DecodeEngine/H323Common.cxx
+
+DecodeEngine/libde_la-PreScanDynamicPorts.lo: DecodeEngine/PreScanDynamicPorts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-PreScanDynamicPorts.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-PreScanDynamicPorts.Tpo -c -o DecodeEngine/libde_la-PreScanDynamicPorts.lo `test -f 'DecodeEngine/PreScanDynamicPorts.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanDynamicPorts.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-PreScanDynamicPorts.Tpo DecodeEngine/$(DEPDIR)/libde_la-PreScanDynamicPorts.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/PreScanDynamicPorts.cpp' object='DecodeEngine/libde_la-PreScanDynamicPorts.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-PreScanDynamicPorts.lo `test -f 'DecodeEngine/PreScanDynamicPorts.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanDynamicPorts.cpp
+
+DecodeEngine/libde_la-PreScanProtocol.lo: DecodeEngine/PreScanProtocol.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-PreScanProtocol.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocol.Tpo -c -o DecodeEngine/libde_la-PreScanProtocol.lo `test -f 'DecodeEngine/PreScanProtocol.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocol.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocol.Tpo DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocol.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/PreScanProtocol.cpp' object='DecodeEngine/libde_la-PreScanProtocol.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-PreScanProtocol.lo `test -f 'DecodeEngine/PreScanProtocol.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocol.cpp
+
+DecodeEngine/libde_la-PreScanProtocolH245.lo: DecodeEngine/PreScanProtocolH245.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-PreScanProtocolH245.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolH245.Tpo -c -o DecodeEngine/libde_la-PreScanProtocolH245.lo `test -f 'DecodeEngine/PreScanProtocolH245.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolH245.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolH245.Tpo DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolH245.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/PreScanProtocolH245.cpp' object='DecodeEngine/libde_la-PreScanProtocolH245.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-PreScanProtocolH245.lo `test -f 'DecodeEngine/PreScanProtocolH245.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolH245.cpp
+
+DecodeEngine/libde_la-PreScanProtocolH323.lo: DecodeEngine/PreScanProtocolH323.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-PreScanProtocolH323.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolH323.Tpo -c -o DecodeEngine/libde_la-PreScanProtocolH323.lo `test -f 'DecodeEngine/PreScanProtocolH323.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolH323.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolH323.Tpo DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolH323.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/PreScanProtocolH323.cpp' object='DecodeEngine/libde_la-PreScanProtocolH323.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-PreScanProtocolH323.lo `test -f 'DecodeEngine/PreScanProtocolH323.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolH323.cpp
+
+DecodeEngine/libde_la-PreScanProtocolMgcp.lo: DecodeEngine/PreScanProtocolMgcp.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-PreScanProtocolMgcp.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolMgcp.Tpo -c -o DecodeEngine/libde_la-PreScanProtocolMgcp.lo `test -f 'DecodeEngine/PreScanProtocolMgcp.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolMgcp.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolMgcp.Tpo DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolMgcp.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/PreScanProtocolMgcp.cpp' object='DecodeEngine/libde_la-PreScanProtocolMgcp.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-PreScanProtocolMgcp.lo `test -f 'DecodeEngine/PreScanProtocolMgcp.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolMgcp.cpp
+
+DecodeEngine/libde_la-PreScanProtocolRtp.lo: DecodeEngine/PreScanProtocolRtp.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-PreScanProtocolRtp.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolRtp.Tpo -c -o DecodeEngine/libde_la-PreScanProtocolRtp.lo `test -f 'DecodeEngine/PreScanProtocolRtp.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolRtp.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolRtp.Tpo DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolRtp.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/PreScanProtocolRtp.cpp' object='DecodeEngine/libde_la-PreScanProtocolRtp.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-PreScanProtocolRtp.lo `test -f 'DecodeEngine/PreScanProtocolRtp.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolRtp.cpp
+
+DecodeEngine/libde_la-PreScanProtocolSip.lo: DecodeEngine/PreScanProtocolSip.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-PreScanProtocolSip.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolSip.Tpo -c -o DecodeEngine/libde_la-PreScanProtocolSip.lo `test -f 'DecodeEngine/PreScanProtocolSip.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolSip.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolSip.Tpo DecodeEngine/$(DEPDIR)/libde_la-PreScanProtocolSip.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/PreScanProtocolSip.cpp' object='DecodeEngine/libde_la-PreScanProtocolSip.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-PreScanProtocolSip.lo `test -f 'DecodeEngine/PreScanProtocolSip.cpp' || echo '$(srcdir)/'`DecodeEngine/PreScanProtocolSip.cpp
+
+DecodeEngine/libde_la-StandaloneDecoder.lo: DecodeEngine/StandaloneDecoder.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-StandaloneDecoder.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-StandaloneDecoder.Tpo -c -o DecodeEngine/libde_la-StandaloneDecoder.lo `test -f 'DecodeEngine/StandaloneDecoder.cpp' || echo '$(srcdir)/'`DecodeEngine/StandaloneDecoder.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-StandaloneDecoder.Tpo DecodeEngine/$(DEPDIR)/libde_la-StandaloneDecoder.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/StandaloneDecoder.cpp' object='DecodeEngine/libde_la-StandaloneDecoder.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-StandaloneDecoder.lo `test -f 'DecodeEngine/StandaloneDecoder.cpp' || echo '$(srcdir)/'`DecodeEngine/StandaloneDecoder.cpp
+
+DecodeEngine/libde_la-WinsResolveName.lo: DecodeEngine/WinsResolveName.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-WinsResolveName.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-WinsResolveName.Tpo -c -o DecodeEngine/libde_la-WinsResolveName.lo `test -f 'DecodeEngine/WinsResolveName.cpp' || echo '$(srcdir)/'`DecodeEngine/WinsResolveName.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-WinsResolveName.Tpo DecodeEngine/$(DEPDIR)/libde_la-WinsResolveName.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/WinsResolveName.cpp' object='DecodeEngine/libde_la-WinsResolveName.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-WinsResolveName.lo `test -f 'DecodeEngine/WinsResolveName.cpp' || echo '$(srcdir)/'`DecodeEngine/WinsResolveName.cpp
+
+DecodeEngine/libde_la-wtapfile.lo: DecodeEngine/wtapfile.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-wtapfile.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-wtapfile.Tpo -c -o DecodeEngine/libde_la-wtapfile.lo `test -f 'DecodeEngine/wtapfile.cpp' || echo '$(srcdir)/'`DecodeEngine/wtapfile.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-wtapfile.Tpo DecodeEngine/$(DEPDIR)/libde_la-wtapfile.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/wtapfile.cpp' object='DecodeEngine/libde_la-wtapfile.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-wtapfile.lo `test -f 'DecodeEngine/wtapfile.cpp' || echo '$(srcdir)/'`DecodeEngine/wtapfile.cpp
+
+DecodeEngine/libde_la-DecodePreScan.lo: DecodeEngine/DecodePreScan.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT DecodeEngine/libde_la-DecodePreScan.lo -MD -MP -MF DecodeEngine/$(DEPDIR)/libde_la-DecodePreScan.Tpo -c -o DecodeEngine/libde_la-DecodePreScan.lo `test -f 'DecodeEngine/DecodePreScan.cpp' || echo '$(srcdir)/'`DecodeEngine/DecodePreScan.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) DecodeEngine/$(DEPDIR)/libde_la-DecodePreScan.Tpo DecodeEngine/$(DEPDIR)/libde_la-DecodePreScan.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DecodeEngine/DecodePreScan.cpp' object='DecodeEngine/libde_la-DecodePreScan.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libde_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o DecodeEngine/libde_la-DecodePreScan.lo `test -f 'DecodeEngine/DecodePreScan.cpp' || echo '$(srcdir)/'`DecodeEngine/DecodePreScan.cpp
 
 .cxx.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -636,6 +751,7 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+	-rm -rf DecodeEngine/.libs DecodeEngine/_libs
 	-rm -rf gen-cpp/.libs gen-cpp/_libs
 
 ID: $(am__tagged_files)

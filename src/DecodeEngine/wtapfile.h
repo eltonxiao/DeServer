@@ -37,7 +37,7 @@ typedef enum _NETWORK_MEDIUM_E
 	NetworkMediumPPP=9,//added by wzheng for ppp protocols
 	NetworkMediumWireless=10,
 	NetworkMediumWiMax,
-	NetworkMediumCHDLC,
+	NetworkMediumCHDLC
 }	NETWORK_MEDIUM_E;
 
 #ifdef __cplusplus
@@ -415,7 +415,7 @@ private:
     bool WriteCapFileInternal(const char* filename, int etherealFiletype, bool ignoreFilter);
 
     // search support
-    typedef enum {NUMBER_OF_SEARCH_SESSION_SLOTS=10};
+    enum {NUMBER_OF_SEARCH_SESSION_SLOTS=10};
     DecodeSearchState * searchSessionSlots[NUMBER_OF_SEARCH_SESSION_SLOTS];
     void SearchPacketDataBinary( InternalSearchState * pSearchState );
     void SearchColumnData( InternalSearchState *pSearchState );

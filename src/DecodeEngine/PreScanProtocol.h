@@ -25,7 +25,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#define HAVE_CONFIG_H
+//#define HAVE_CONFIG_H
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"
